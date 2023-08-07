@@ -1,20 +1,26 @@
-import sys
+n = int(input())
 
+stack = []
+ans = []
+k = 1
+cnt = 1
 
-def solution():
-    n, *nums = map(int, sys.stdin.buffer.read().splitlines())
-    s = []
-    answer = []
-    cur = 1
-    for value in nums:
-        while cur <= value:
-            answer.append('+')
-            s.append(cur)
-            cur += 1
-        if s.pop() != value:
-            return "NO"
-        answer.append('-')
-    return '\n'.join(answer)
+for i in range(n):
+    num = int(input())
+    while cnt <= num:
+        stack.append(cnt)
+        ans.append('+')
+        cnt +=1
 
+    if stack[-1] > num:
+        k = 0
 
-print(solution())
+    if stack[-1] == num:
+        stack.pop()
+        ans.append('-')
+
+if k == 0:
+    print('NO')
+else:
+    for i in ans:
+        print(i)
