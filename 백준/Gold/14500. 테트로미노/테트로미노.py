@@ -18,14 +18,17 @@ def dfs(x, y, sm, cnt):
     for i in range(4):
         nx = x + dx[i]
         ny = y + dy[i]
+        # 그래프를 벗어나지 않고, 방문하지 않았을 때
         if nx < 0 or nx >= m or ny < 0 or ny >= n or visited[nx][ny]:
             continue
 
+        # cnt가 2일 때 ㅗ 모양을 만들기 위함.
         if cnt == 2:
             visited[nx][ny] = True
             dfs(x,y,sm+arr[nx][ny], cnt + 1)
             visited[nx][ny] = False
         
+        # 이후 cnt가 2일때 ㅗ 모양을 만들고 dfs를 빠져나오면 나머지 모양을 만들 수 있다.
         visited[nx][ny] = True
         dfs(nx, ny, sm + arr[nx][ny], cnt + 1)
         visited[nx][ny] = False        
