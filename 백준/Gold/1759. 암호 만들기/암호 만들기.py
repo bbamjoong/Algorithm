@@ -7,6 +7,7 @@ arr = list(map(str, input().split()))
 arr.sort()
 res=[]
 
+# 모음, 자음 개수를 반환하는 함수
 def count_vc(li):
     count = 0
     for i in li:
@@ -17,6 +18,7 @@ def count_vc(li):
 def dfs():
     if len(res) == n:
         a, b = count_vc(res)
+        # 모음1개이상, 자음2개이상일 시 출력
         if a>=1 and b>=2:
             print(''.join(map(str,res)))
         return
