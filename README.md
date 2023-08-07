@@ -4,4 +4,5 @@
 사용언어
 <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=Python&logoColor=white"/>
 
-(http://mazassumnida.wtf/api/v2/generate_badge?boj=rlaqjawnd625)](https://solved.ac/rlaqjawnd625)
+[![Solved.ac
+프로필](http://mazassumnida.wtf/api/v2/generate_badge?boj=rlaqjawnd625)](https://solved.ac/rlaqjawnd625)
