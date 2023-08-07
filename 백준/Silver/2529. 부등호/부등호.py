@@ -1,35 +1,39 @@
-k = int(input())
-sign_of_inequality = input()
-insert_idx = 0
-insert_num = 8
-max = [9]
-prev = sign_of_inequality[0]
-for i in range(k):
-  curr = sign_of_inequality[2*i]
-  if(prev != curr):
-    insert_idx = len(max)-1
-  prev = curr
-  if(curr == '<'):
-    max.insert(insert_idx, insert_num)
-  elif(curr == '>'):
-    max.append(insert_num)
-  insert_num -= 1
-max = "".join(list(map(str, max)))
-print(max)
+import sys
+input = sys.stdin.readline
 
-insert_idx = 0
-insert_num = 1
-min = [0]
-prev = sign_of_inequality[0]
-for i in range(k):
-  curr = sign_of_inequality[2*i]
-  if(prev != curr):
-    insert_idx = len(min)-1
-  prev = curr
-  if(curr == '<'):
-    min.append(insert_num)
-  elif(curr == '>'):
-    min.insert(insert_idx, insert_num)
-  insert_num += 1
-min = "".join(list(map(str, min)))
-print(min)
+n = int(input())
+sign = list(map(str, input().split()))
+nums = [i for i in range(10)]
+res = []
+max_num = '0'
+min_num = str(sys.maxsize)
+
+def check(idx):
+    if sign[idx] == '>':
+        if res[idx] < res[idx+1]: return False       
+    if sign[idx] == '<':
+        if res[idx] > res[idx+1]: return False
+    return True
+        
+def dfs():
+    global max_num, min_num
+
+    if len(res) >= 2:
+        j = len(res)-2
+        if check(j) == False:
+            return
+    
+    if len(res) == n+1:
+        a = ''.join(map(str, res))
+        max_num = max(max_num, a)
+        min_num = min(min_num, a)
+        return
+
+    for i in range(10):
+        if nums[i] not in res:
+            res.append(nums[i])
+            dfs()
+            res.pop()
+dfs()
+print(max_num)
+print(min_num)
