@@ -1,0 +1,33 @@
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+arr = [list(map(int, input().split()))for _ in range(n)]
+li = [i for i in range(1,n+1)]
+start = []
+link = []
+c = sys.maxsize
+def dfs(k):
+    if len(start)==k:
+        a = 0
+        b = 0
+        global c
+        link = list(set(li) - set(start))
+        for i in start:
+            for j in start:
+                a += arr[i-1][j-1]        
+        for i in link:
+            for j in link:
+                b += arr[i-1][j-1]
+        c = min(c, abs(a-b))
+        return
+
+    for i in li:
+        if len(start) == 0 or start[-1] < i:
+            start.append(i)
+            dfs(k)
+            start.pop()
+
+for i in range(1,n//2+1):
+    dfs(i)
+print(c)
