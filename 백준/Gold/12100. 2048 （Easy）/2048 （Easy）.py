@@ -18,7 +18,7 @@ def up(graph):
                 elif graph[maincheck][j] == graph[i][j]:
                     graph[maincheck][j], graph[i][j] = 2 * graph[maincheck][j], 0
                     maincheck += 1
-                #ex) maincheck = 1, check = 3일 때 [0 2 0 4 0 ] -> [0 (2->4) 0 (4->2) 0]
+                #ex) maincheck = 1, check = 3일 때 [0 2 0 4 0] -> [0 (2->4) 0 (4->2) 0]
                 #포인터 아래의 값과 check값을 바꿔준다.
                 else:
                     maincheck += 1
