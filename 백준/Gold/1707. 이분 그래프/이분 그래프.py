@@ -2,16 +2,22 @@ import sys
 input = sys.stdin.readline
 sys.setrecursionlimit(100000)
 
-def dfs(start, visited, graph, group):
-    visited[start] = group
 
+def dfs(start, num):
+    visited[start] = num
+
+    # start와 연결된 노드 확인
     for i in graph[start]:
+        # 만약 num이 부여되지 않았다면
         if visited[i] == 0:
-            res = dfs(i, visited, graph, -group)
+            # -num부여 후 i와 연결된 노드 확인
+            res = dfs(i, -num)
+            # 만약 부모노드와 자식노드가 같은 num을 부여받았다면 False 반환
             if not res:
                 return False
         else:
-            if visited[i] == group:
+            # 만약 부모노드와 자식노드가 같은 num을 부여받았다면 False 반환
+            if visited[i] == num:
                 return False
     return True
 
@@ -29,7 +35,7 @@ for _ in range(k):
 
     for i in range(1,v+1):
         if visited[i] == 0:
-            res = dfs(i, visited, graph, 1)
+            res = dfs(i, 1)
             if not res:
                 break
     if res:
