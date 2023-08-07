@@ -1,6 +1,5 @@
 import sys
 input = sys.stdin.readline
-from collections import deque
 
 n = int(input())
 k = int(input())
@@ -27,18 +26,18 @@ x, y = 0, 0
 cnt = 0
 direction = 0
 
-q = deque()
-q.append((0,0))
+q = [(0,0)]
 visited[0][0] = True
 
 while True:
     cnt += 1
     x += dx[direction]
     y += dy[direction]
-    
+
     # 맵 밖을 벗어나면 종료
     if x < 0 or x >= n or y < 0 or y >= n:
         break
+
     # 사과를 먹었고, 뱀의 몸이 없는 곳이라면
     if board[x][y] == 1 and visited[x][y] == False:
         # 사과를 제거해주고
@@ -46,21 +45,21 @@ while True:
         # queue에 좌표 입력 / 방문표시
         q.append((x,y))
         visited[x][y] = True
-        
-        # 방향전환
+
+        # 방향 전환
         if cnt in dict:
             if dict[cnt] == 'D':
                 direction = (direction + 1) % 4
             elif dict[cnt] == 'L':
                 direction = (direction - 1) % 4
-
-    # 사과가 없는 곳이고, 뱀의 몸이 없는 곳이라면
+    
+    # 사과가 없는 곳이고 , 뱀의 몸이 없는 곳이라면
     elif board[x][y] == 0 and visited[x][y] == False:
         # queue에 좌표 입력 / 방문표시
         q.append((x,y))
         visited[x][y] = True
         # 꼬리부분 queue에서 제거 / 방문최신화
-        nx, ny = q.popleft()
+        nx, ny = q.pop(0)
         visited[nx][ny] = False
 
         # 방향 전환
@@ -72,4 +71,5 @@ while True:
     
     else:
         break
+
 print(cnt)
