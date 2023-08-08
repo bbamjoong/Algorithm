@@ -19,59 +19,30 @@ def compare():
         dice[3] = graph[x][y]
         graph[x][y] = 0
 
-def south():
-    global x, y
-    nx, ny = x+1, y
-    if nx < 0 or nx >= n or ny < 0 or ny >= m:
-        return
-    dice[0], dice[1], dice[2], dice[3] = dice[3], dice[0], dice[1], dice[2]
-    x, y = nx, ny
+def turn(where):
+    global dice
+    d1, d2, d3, d4, d5, d6 = dice
+    # 동쪽
+    if where == 1:
+        dice = [d1, d5, d3, d6, d4, d2]
+    # 서쪽
+    elif where == 2:
+        dice = [d1, d6, d3, d5, d2, d4]
+    # 북쪽
+    elif where == 3:
+        dice = [d2, d3, d4, d1, d5, d6]
+    # 남쪽
+    elif where == 4:
+        dice = [d4, d1, d2, d3, d5, d6]
+
     compare()
-
-    print(dice[1])
-
-def north():
-    global x, y
-    nx, ny = x-1, y
-    if nx < 0 or nx >= n or ny < 0 or ny >= m:
-        return
-    dice[0], dice[1], dice[2], dice[3] = dice[1], dice[2], dice[3], dice[0]
-    x, y = nx, ny
-    compare()
-
-    print(dice[1])
-
-def east():
-    global x, y
-    nx, ny = x, y+1
-    if nx < 0 or nx >= n or ny < 0 or ny >= m:
-        return
-    dice[1], dice[3], dice[4], dice[5] = dice[4], dice[5], dice[3], dice[1]
-    x, y = nx, ny
-    compare()
-
-    print(dice[1])
-
-def west():
-    global x, y
-    nx, ny = x, y-1
-    if nx < 0 or nx >= n or ny < 0 or ny >= m:
-        return
-    dice[1], dice[3], dice[4], dice[5] = dice[5], dice[4], dice[1], dice[3]
-    x, y = nx, ny
-    compare()
-
     print(dice[1])
 
 for i in dir:
-    if i == 1:
-        east()
+    nx, ny = x + dx[i-1], y + dy[i-1]
 
-    elif i == 2:
-        west()
-
-    elif i == 3:
-        north()
-
-    elif i == 4:
-        south()
+    # graph범위 안에 있을 시 주사위 굴리기
+    if 0 <= nx < n and 0 <= ny < m:
+        # 좌표 최신화
+        x, y = nx, ny
+        turn(i)
