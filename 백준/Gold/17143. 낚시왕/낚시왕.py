@@ -32,14 +32,20 @@ def shark_move():
 
 def next_dist(i,j,speed,dir):
     if dir == up or dir == down:
+        # ex) 4행까지 있을 경우 상어는  1 2 3(아래로움직일 때) 2 1 0(위로 움직일 때)의 사이클을 가진다.
         cycle = (R - 1) * 2
 
+        # 항상 0행에서 아래쪽으로 출발하는 조건으로 맞춰줄 것이다.
+        # 따라서 위쪽을 보고 있는 상어는 cycle - i
+        # 아래쪽을 보고있는 상어는 i를 더해준다.
         if dir == up:
-            speed += 2 * (R - 1) - i
+            speed += cycle - i
         else:
             speed += i
 
+        # 여러번 반복하는 것은 불필요한 행위이므로 speed로 cycle을 나눠준다.
         speed %= cycle
+        # 만약 speed가 행의 수 이상이라면 상어는 다시 위로 올라갈 것이다.
         if speed >= R:
             return (cycle - speed, j, up)
         return(speed, j, down)
@@ -47,13 +53,13 @@ def next_dist(i,j,speed,dir):
     else:
         cycle = (C - 1) * 2
         if dir == left:
-            speed += 2 * (C - 1) - j
+            speed += cycle - j
         else:
             speed += j
 
         speed %= cycle
         if speed >= C:
-            return(i, cycle- speed, left)
+            return(i, cycle - speed, left)
         return(i, speed, right)
 
 
@@ -62,8 +68,8 @@ R,C,m = map(int, input().split())
 graph = [[0] * C for _ in range(R)]
 
 for _ in range(m):
-   r,c,s,d,z = map(int, input().split()) 
-   graph[r-1][c-1] = [s,d,z]
+    r,c,s,d,z = map(int, input().split()) 
+    graph[r-1][c-1] = [s,d,z]
 
 up, down, right, left = 1, 2, 3, 4
 
