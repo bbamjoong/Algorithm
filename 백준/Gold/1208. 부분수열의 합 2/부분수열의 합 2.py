@@ -14,44 +14,56 @@ l = n//2
 r = n - l
 
 # 왼쪽 부분집합
-left = {}
+left = [0] * (1<<l)
 
-# 딕셔너리형태로 저장.
 # 비트마스킹을 이용해 합을 구하자.
 for i in range(1<<l):
-    sm = 0
     for k in range(l):
         if (i&(1<<k)):
-            sm += arr[k]
+            left[i] += arr[k]
 
-    # 합이 딕셔너리에 처음 들어갈 때, 아닐 때를 구분    
-    if sm in left.keys():
-        left[sm] += 1
-    else:
-        left[sm] = 1
 
 # 오른쪽 부분집합
-right = {}
+right = [0] * (1<<r)
 
 for i in range(1<<r):
-    sm = 0
     for k in range(r):
         if (i & (1<<k)):
-            sm += arr[l+k]
+            right[i] += arr[l+k]
 
-    if sm in right.keys():
-        right[sm] += 1
-    else:
-        right[sm] = 1
+left.sort()
+right.sort(reverse=True)
 
-# (left딕셔너리의 key) + (right 딕셔터리의 key) = s 일 경우 두 key의 value를 곱해준다.
-# But, (left 딕셔너리의 key) & (right 딕셔너리의 key) 둘 다 0일 경우는 ans에서 1을 빼준다.
-# 아무 원소도 선택하지 않는다는 선택지가 포함되어있기 때문이다.
+start_l, start_r = 0, 0
 ans = 0
-for i in left.keys():
-    if s - i in right.keys():
-        ans += left[i] * right[s-i]
-        if i == 0 and (s - i) == 0:
-            ans -= 1
 
-print(ans)
+# 투포인터 이용
+while start_l < len(left) and start_r < len(right):
+    tmp = left[start_l]+right[start_r]
+    if tmp == s:
+        count_l = 1
+        count_r = 1
+
+        while start_l < len(left)-1 and left[start_l] == left[start_l+1]:
+            count_l += 1
+            start_l += 1
+        
+        while start_r < len(right)-1 and right[start_r] == right[start_r+1]:
+            count_r += 1
+            start_r += 1
+        
+        ans += count_l * count_r
+        
+        start_l += 1
+        start_r += 1
+    
+    elif tmp < s:
+        start_l += 1
+    
+    else:
+        start_r += 1
+
+if s == 0 and ans > 0:
+    print(ans-1)
+else:
+    print(ans)
