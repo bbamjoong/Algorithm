@@ -15,20 +15,23 @@ for i in range(n+1):
         prime.append(i)
 
 ans = 0
-for i in range(len(prime)):
-    sm = 0
-    if prime[i] > int(n/2):
-        break
-    for j in range(i, len(prime)):
-        sm += prime[j]
-        if sm > n:
-            break
-        elif sm == n:
-            ans += 1
-            break
+sm = 0
+l = 0
+r = 0
 
-if prime:
-    if prime[-1] == n:
+while True:
+    if sm == n:
         ans += 1
+
+    if sm > n:
+        sm -= prime[l]
+        l += 1
+
+    elif r == len(prime):
+        break
+
+    else:
+        sm += prime[r]
+        r += 1
 
 print(ans)
