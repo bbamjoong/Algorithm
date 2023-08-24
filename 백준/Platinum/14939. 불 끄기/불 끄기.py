@@ -3,7 +3,7 @@ input = sys.stdin.readline
 
 arr = [list(input().strip()) for _ in range(10)]
 
-dx = [0,0,0,-1,1]
+dx = [0,0,0,-1,1] 
 dy = [0,-1,1,0,0]
 
 ans = 101 #답은 최대 100개이므로 불가능한 개수인 101로 초기화해주는 것
