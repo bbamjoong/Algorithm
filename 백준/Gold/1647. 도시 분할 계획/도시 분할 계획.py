@@ -3,7 +3,7 @@ input = sys.stdin.readline
 
 # 부모 노드 찾기
 def find(x):
-    if x !=parent[x]:
+    if parent[x] != x:
         return find(parent[x])
     return x
 
