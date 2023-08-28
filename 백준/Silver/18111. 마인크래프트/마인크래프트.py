@@ -3,28 +3,34 @@ input = sys.stdin.readline
 
 n, m, b = map(int, input().split())
 
-arr = []
+arr = {}
 for i in range(n):
     li = list(map(int, input().split()))
-    arr.append(li)
+    for j in li:
+        if j not in arr.keys():
+            arr[j] = 1
+        else:
+            arr[j] += 1
 
 ans_height = 0
 ans = sys.maxsize
 
-for height in range(257):
+max_height = max(arr.keys())
+min_height = min(arr.keys())
+
+for height in range(max_height, min_height - 1, -1):
     surplus = 0
     need = 0
 
-    for i in range(n):
-        for j in range(m):
-            # 목표높이인 height보다 현재칸의 블록 높이가 작다면
-            # 몇 칸을 채워야하는지 갱신
-            if arr[i][j] < height:
-                need += (height - arr[i][j])
-            # 목표높이인 height와 현재칸의 높이가 같거나 크다면
-            # 몇 칸을 캘 수 있는지 갱신           
-            else:
-                surplus += (arr[i][j] - height)
+    for i in arr.keys():
+        # 목표높이인 height보다 현재칸의 블록 높이가 작다면
+        # 몇 칸을 채워야하는지 갱신
+        if i < height:
+            need += (height - i) * arr[i]
+        # 목표높이인 height와 현재칸의 높이가 같거나 크다면
+        # 몇 칸을 캘 수 있는지 갱신           
+        else:
+            surplus += (i - height) * arr[i]
     
     block = surplus + b
 
@@ -34,7 +40,7 @@ for height in range(257):
 
     time = 2 * surplus + need
 
-    if time <= ans:
+    if time < ans:
         ans = time
         ans_height = height
 
