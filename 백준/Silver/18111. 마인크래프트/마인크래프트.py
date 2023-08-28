@@ -4,19 +4,14 @@ input = sys.stdin.readline
 n, m, b = map(int, input().split())
 
 arr = []
-min_arr = sys.maxsize
-max_arr = 0
-
 for i in range(n):
     li = list(map(int, input().split()))
-    min_arr = min(min_arr, min(li))
-    max_arr = max(max_arr, max(li))
     arr.append(li)
 
 ans_height = 0
 ans = sys.maxsize
 
-for height in range(min_arr, max_arr+1):
+for height in range(257):
     surplus = 0
     need = 0
 
