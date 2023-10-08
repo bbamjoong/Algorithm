@@ -1,27 +1,25 @@
 import sys
 input = sys.stdin.readline
 
-def prime(x):
-    if x == 0 or x == 1:
-        return False
-    
-    for i in range(2, int(x**0.5)+1):
-        if x % i == 0:
-            return False
-        
-    return True
+n = 123456*2
 
-cnt = 0
+prime = [False, False] + [True] * (n-1)
+
+for i in range(2, int(n**0.5) + 1):
+    if prime[i]:
+        for j in range(2*i, n+1, i):
+            prime[j] = False
 
 while True:
-    x = int(input())
+    n = int(input())
 
-    if x == 0:
+    if n == 0:
         break
 
-    for i in range(x+1, 2*x+1):
-        if prime(i):
+    cnt = 0
+
+    for i in range(n+1, 2*n+1):
+        if prime[i]:
             cnt += 1
 
     print(cnt)
-    cnt = 0
