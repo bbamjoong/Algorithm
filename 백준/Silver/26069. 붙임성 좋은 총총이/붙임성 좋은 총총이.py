@@ -3,14 +3,15 @@ input = sys.stdin.readline
 
 n = int(input())
 
-dance = ['ChongChong']
+dance = set(['ChongChong'])
+
 for i in range(n):
-    a, b = input().split()
-    
-    if a in dance and b not in dance:
-        dance.append(b)
-
-    elif a not in dance and b in dance:
-        dance.append(a)
-
+	a, b = input().split()
+	
+	if a in dance:
+		dance.add(b)
+		
+	if b in dance:
+		dance.add(a)
+		
 print(len(dance))
