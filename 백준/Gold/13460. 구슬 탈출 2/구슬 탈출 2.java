@@ -2,14 +2,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Main {
 	static int n;
 	static int m;
+	static char[][] arr;
 	static int[] dx = { -1, 1, 0, 0 };
 	static int[] dy = { 0, 0, -1, 1 };
 
@@ -25,7 +28,7 @@ public class Main {
 		int bx1 = 0;
 		int by1 = 0;
 
-		char[][] arr = new char[n][m];
+		arr = new char[n][m];
 		for (int i = 0; i < n; i++) {
 			String word = br.readLine();
 			for (int j = 0; j < m; j++) {
@@ -44,11 +47,11 @@ public class Main {
 		}
 
 		Queue<int[]> q = new LinkedList<>();
-		List<int[]> visited = new ArrayList<>();
+		Set<Integer> visited = new HashSet<>();
 
 		q.offer(new int[] { rx1, ry1, bx1, by1, 0 });
-		visited.add(new int[] { rx1, ry1, bx1, by1 });
-		
+		visited.add(hash(rx1, ry1, bx1, by1));
+
 		int rx, ry, bx, by, cnt;
 		int ans = -1;
 
@@ -64,57 +67,27 @@ public class Main {
 				ans = cnt;
 				break;
 			}
-			
+
 			if (cnt > 10) {
 				ans = -1;
 				break;
 			}
-			
+
 			for (int i = 0; i < dx.length; i++) {
-				int nrx = rx + dx[i];
-				int nry = ry + dy[i];
-				int rmove = 1;
+				int[] rPoll = move(rx, ry, dx[i], dy[i]);
+				int nrx = rPoll[0];
+				int nry = rPoll[1];
+				int rmove = rPoll[2];
 
-				while (true) {
-					if (arr[nrx][nry] == '#') {
-						nrx -= dx[i];
-						nry -= dy[i];
-						break;
-					}
-
-					else if (arr[nrx][nry] == 'O') {
-						break;
-					}
-
-					nrx += dx[i];
-					nry += dy[i];
-					rmove++;
-				}
-
-				int nbx = bx + dx[i];
-				int nby = by + dy[i];
-				int bmove = 1;
-
-				while (true) {
-					if (arr[nbx][nby] == '#') {
-						nbx -= dx[i];
-						nby -= dy[i];
-						break;
-					}
-
-					else if (arr[nbx][nby] == 'O') {
-						break;
-					}
-
-					nbx += dx[i];
-					nby += dy[i];
-					bmove++;
-				}
+				int[] bPoll = move(bx, by, dx[i], dy[i]);
+				int nbx = bPoll[0];
+				int nby = bPoll[1];
+				int bmove = bPoll[2];
 
 				if (arr[nbx][nby] == 'O') {
 					continue;
 				}
-				
+
 				if (nrx == nbx & nry == nby) {
 					if (rmove > bmove) {
 						nrx -= dx[i];
@@ -125,21 +98,33 @@ public class Main {
 					}
 				}
 
-				boolean isExist = false;
-				for (int j = 0; j < visited.size(); j++) {
-					if (Arrays.equals(new int[] { nrx, nry, nbx, nby }, visited.get(j))) {
-						isExist = true;
-						break;
-					}
-				}
+				boolean isExist = visited.contains(hash(nrx, nry, nbx, nby));
 
 				if (!isExist) {
 					q.offer(new int[] { nrx, nry, nbx, nby, cnt + 1 });
-					visited.add(new int[] { nrx, nry, nbx, nby });
+					visited.add(hash(nrx, nry, nbx, nby));
 				}
 			}
 		}
 		sb.append(ans);
 		System.out.println(sb.toString());
+	}
+
+	static int hash(int... values) {
+		int result = 4;
+		for (int value : values) {
+			result = 8 * result + value;
+		}
+		return result;
+	}
+
+	static int[] move(int x, int y, int dx, int dy) {
+		int cnt = 0;
+		while (arr[x + dx][y + dy] != '#' & arr[x][y] != 'O') {
+			x += dx;
+			y += dy;
+			cnt += 1;
+		}
+		return new int[] { x, y, cnt };
 	}
 }
