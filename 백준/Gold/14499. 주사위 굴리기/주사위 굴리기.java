@@ -1,21 +1,17 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int n;
-    static int m;
-    static int x;
-    static int y;
-    static int k;
-    static int[][] arr;
-
+    static int n, m, x, y, k;
+    static int[][] graph;
+    static int[] action;
     static int[] dx = {0, 0, -1, 1};
     static int[] dy = {1, -1, 0, 0};
     static int[] dice = new int[7];
-    static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -25,40 +21,42 @@ public class Main {
         y = Integer.parseInt(st.nextToken());
         k = Integer.parseInt(st.nextToken());
 
-        arr = new int[n][m];
+        graph = new int[n][m];
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
-                arr[i][j] = Integer.parseInt(st.nextToken());
+                graph[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
+        action = new int[k];
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < k; i++) {
-            sb.setLength(0);
-            int direction = Integer.parseInt(st.nextToken());
-            roll(direction);
+            action[i] = Integer.parseInt(st.nextToken());
+        }
+
+        for (int i : action) {
+            int nx = x + dx[i - 1];
+            int ny = y + dy[i - 1];
+
+            if (0 <= nx && nx < n && 0 <= ny && ny < m) {
+                x = nx;
+                y = ny;
+                turn(i);
+            }
         }
     }
 
-    static void roll(int direction) {
-        int nx = x + dx[direction - 1];
-        int ny = y + dy[direction - 1];
-
-        if (nx < 0 | ny < 0 | nx >= n | ny >= m) {
-            return;
+    static void compare() {
+        if (graph[x][y] == 0) {
+            graph[x][y] = dice[6];
         } else {
-            x = nx;
-            y = ny;
-            changeDice(direction);
-            checkCondition();
-            sb.append(dice[3]);
-            System.out.println(sb.toString());
+            dice[6] = graph[x][y];
+            graph[x][y] = 0;
         }
-
     }
 
-    private static void changeDice(int direction) {
+    static void turn(int direction) {
         switch (direction) {
             case 1:
                 swapValues(2, 6, 4);
@@ -73,6 +71,9 @@ public class Main {
                 swapValues(1, 6, 5);
                 break;
         }
+
+        compare();
+        System.out.println(dice[3]);
     }
 
     private static void swapValues(int a, int b, int c) {
@@ -81,14 +82,5 @@ public class Main {
         dice[a] = dice[b];
         dice[b] = dice[c];
         dice[c] = tmp;
-    }
-
-    private static void checkCondition() {
-        if (arr[x][y] == 0) {
-            arr[x][y] = dice[6];
-        } else {
-            dice[6] = arr[x][y];
-            arr[x][y] = 0;
-        }
     }
 }
