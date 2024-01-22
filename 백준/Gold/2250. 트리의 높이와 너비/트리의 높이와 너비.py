@@ -1,98 +1,74 @@
 import sys
-from collections import deque
+
 input = sys.stdin.readline
 
 
-n = int(input())
+# 중위순회로 돌면서 번호를 매겨준다.
+def in_order(v):
+    global order
 
-# 노드가 하나일 때 (1, 1)출력 후 종료
-if n == 1:
-    print(1, 1)
-    exit()
+    if v:
+        in_order(tree[v][0])
+        tree[v][4] = order
+        order += 1
+        in_order(tree[v][1])
 
-tree = [[-1,-1,-1] for _ in range(n+1)]
 
-# [0] : 시작노드를 찾기위한 밑작업, [1] : left, [2] : right
-for i in range(n):
+# 이진트리를 돌면서 tree의 깊이를 매겨준다.
+def dfs(cur, depth):
+    global max_depth
+    visited[cur] = True
+    tree[cur][3] = depth
+    if max_depth < depth:
+        max_depth = depth
+
+    for i in range(2):
+        if not visited[tree[cur][i]]:
+            dfs(tree[cur][i], depth + 1)
+
+
+N = int(input())
+
+tree = [[0, 0, 0, 0, 0] for i in range(N + 1)]  # 왼쪽 자식,오른쪽자식, 부모, 깊이 , 너비
+for _ in range(N):
     node, left, right = map(int, input().split())
-    tree[node][1] = left
-    tree[node][2] = right
-    # 자식노드라는 것을 나타내주기 위해 -1대신 1을 넣어줄 것이다.
-    tree[left][0] = 1
-    tree[right][0] = 1
 
-# 시작노드가 1이 아닐 수 있기 때문에 시작노드를 찾아주는 작업
-root = -1
-for i in range(1, n+1):
-    if tree[i][0] == -1:
+    if left == -1: left = 0
+    if right == -1: right = 0
+
+    tree[node][0] = left
+    tree[node][1] = right
+
+    tree[left][2] = node
+    tree[right][2] = node
+
+visited = [False] * (N + 1)
+visited[0] = True
+
+# 루트번호 찾기
+root = 0
+for i in range(1, N + 1):
+    if tree[i][2] == 0:
         root = i
 
-# 첫번째 값은 depth 두번째 값은 x축의 위치 저장할 것
-visit = [[-1, -1] for _ in range(n+1)]
+# 깊이의 최대치 찾기
+max_depth = 0
 
-def maxdepth(root):
-    queue = deque([root])
-    visit[root][0] = 1
+dfs(root, 1)
+order = 1  # 순서를 매길 번호
+in_order(root)  # 중위순회를 root번호부터 돈다.
 
-    while queue:
-        node = queue.popleft()
-        left = tree[node][1]
-        right = tree[node][2]
-        # 왼쪽자식노드가 존재할 때
-        if left != -1:
-            # 방문하지 않았다면
-            if visit[left][0] == -1:
-                # 부모노드의 depth + 1을 visit[left][0]에 저장
-                visit[left][0] = visit[node][0] + 1
-                queue.append(left)
-        # 오른쪽자식노드가 존재할 때
-        if right!= -1:
-            # 방문하지 않았다면
-            if visit[right][0] == -1:
-                # 부모노드의 depth + 1을 visit[left][0]에 저장
-                visit[right][0] = visit[node][0] + 1
-                queue.append(right)
-    return max(visit)[0]
+# 각 깊이당 너비를 구하기 위해 최대깊이만큼 이중 리스트 설정
+depth_list = [[] for _ in range(max_depth + 1)]
+for j in range(1, N + 1):
+    depth_list[tree[j][3]].append(tree[j][4])
 
-# dist : x축의 좌표
-dist = 0
-def inorder(node):
-    global dist
-    # 노드의 left root가 존재할 때
-    if tree[node][1] != -1:
-        # 함수 호출
-        inorder(tree[node][1])
-    # 만약 왼쪽 끝까지 도착했다면 x축의 좌표에 1을 더해주고
-    dist+=1
-    # visit[node][1]에 x축의 좌표를 갱신해준다.
-    visit[node][1] = dist
-
-    # 이 후 노드의 right root가 존재할 때
-    if tree[node][2] != -1:
-        # 함수 호출
-        inorder(tree[node][2])
-
-
-maxdepth(root)
-inorder(root)
-maxdepth = maxdepth(root)
-
-max_dist = 0
-level = 0
-
-# 깊이에 따른 최대 너비를 계산한다.
-for d in range(1,maxdepth+1):
-    minval = sys.maxsize
-    maxval = 0
-    # 같은 깊이일 때 노드의 최소 x값, 최대 x값 저장
-    for i in range(1,n+1):
-        if d == visit[i][0]:
-            minval = min(visit[i][1], minval)
-            maxval = max(visit[i][1], maxval)
-
-    # max_dist보다 최대x값 - 최소x값+1이 더 클 경우 max_dist, level 갱신
-    if max_dist < maxval - minval + 1:
-        max_dist = maxval - minval + 1
-        level = d
-
-print(level, max_dist)
+result = []
+# 깊이리스트를 돌면서
+for i in range(len(depth_list)):
+    if len(depth_list[i]) <= 1:  # 만약 해당 깊이에 하나밖에 없다면 1을 넣어준다.
+        result.append(1)
+    else:  # 2개이상이라면
+        result.append(max(depth_list[i]) - min(depth_list[i]) + 1)  # 가장짧은것과 긴것의 차 + 1을 넣어준다.
+# 그중 최대 값을 찾아준다.(0은 빈 리스트이기 때문에 에러 방지를 위해 1번부터 찾아준다.)
+print(result.index(max(result), 1), max(result))
