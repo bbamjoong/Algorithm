@@ -25,8 +25,9 @@ public class Main {
         }
 
         wall();
-
-        System.out.println(ans);
+        StringBuilder sb = new StringBuilder();
+        sb.append(ans);
+        System.out.println(sb.toString());
     }
 
     static void wall() {
