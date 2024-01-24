@@ -26,39 +26,31 @@ public class Main {
             }
         }
 
-        wall(0);
+        wall(0, 0);
 
         System.out.println(ans);
     }
 
-    static void wall(int cnt) {
+    static void wall(int cnt, int depth) {
         if (cnt == 3) {
             bfs();
             return;
         }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (graph[i][j] == 0) {
-                    graph[i][j] = 1;
-                    wall(cnt + 1);
-                    graph[i][j] = 0;
-                }
+
+        for (int i = depth; i < n * m; i++) {
+            if (graph[i / m][i % m] == 0) {
+                graph[i / m][i % m] = 1;
+                wall(cnt + 1, depth + 1);
+                graph[i / m][i % m] = 0;
             }
         }
     }
 
     static void bfs() {
-        int[][] newGraph = cloneArr(graph);
         int[][] visited = new int[n][m];
 
         Queue<Node> q = new LinkedList<>();
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (newGraph[i][j] == 2) {
-                    q.add(new Node(i, j));
-                }
-            }
-        }
+        addVirus(q);
 
         while (!q.isEmpty()) {
             Node poll = q.poll();
@@ -72,27 +64,47 @@ public class Main {
                 if (nx < 0 || ny < 0 || nx >= n || ny >= m) {
                     continue;
                 }
-                if (visited[nx][ny] == 0 && newGraph[nx][ny] == 0) {
+                if (visited[nx][ny] == 0 && graph[nx][ny] == 0) {
                     visited[nx][ny] = 1;
-                    newGraph[nx][ny] = 2;
+                    graph[nx][ny] = 3;
                     q.add(new Node(nx, ny));
                 }
             }
         }
-
-        calculateCnt(newGraph);
+        calculateCnt();
+        initializeGraph();
     }
 
-    static void calculateCnt(int[][] newGraph) {
+    static void addVirus(Queue<Node> q) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (graph[i][j] == 2) {
+                    q.add(new Node(i, j));
+                }
+            }
+        }
+    }
+
+    static void calculateCnt() {
         int bfs_cnt = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (newGraph[i][j] == 0) {
+                if (graph[i][j] == 0) {
                     bfs_cnt++;
                 }
             }
         }
         ans = Math.max(ans, bfs_cnt);
+    }
+
+    static void initializeGraph() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (graph[i][j] == 3) {
+                    graph[i][j] = 0;
+                }
+            }
+        }
     }
 
     static class Node {
@@ -103,13 +115,5 @@ public class Main {
             this.x = x;
             this.y = y;
         }
-    }
-
-    static int[][] cloneArr(int[][] arr) {
-        int[][] newArr = new int[arr.length][arr[0].length];
-        for (int i = 0; i < arr.length; i++) {
-            newArr[i] = arr[i].clone();
-        }
-        return newArr;
     }
 }
