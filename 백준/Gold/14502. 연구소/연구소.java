@@ -26,23 +26,42 @@ public class Main {
             }
         }
 
-        wall(0, 0);
+        wall();
 
         System.out.println(ans);
     }
 
-    static void wall(int cnt, int depth) {
-        if (cnt == 3) {
-            bfs();
-            return;
-        }
+    static void wall() {
+        int area = n * m;
 
-        for (int i = depth; i < n * m; i++) {
-            if (graph[i / m][i % m] == 0) {
-                graph[i / m][i % m] = 1;
-                wall(cnt + 1, depth + 1);
-                graph[i / m][i % m] = 0;
+        for (int first = 0; first < area - 2; first++) {
+            if (graph[first / m][first % m] == 0) {
+                graph[first / m][first % m] = 1;
+            } else {
+                continue;
             }
+
+            for (int second = first + 1; second < area - 1; second++) {
+                if (graph[second / m][second % m] == 0) {
+                    graph[second / m][second % m] = 1;
+                } else {
+                    continue;
+                }
+
+                for (int third = second + 1; third < area; third++) {
+                    if (graph[third / m][third % m] == 0) {
+                        graph[third / m][third % m] = 1;
+                    } else {
+                        continue;
+                    }
+
+                    bfs();
+
+                    graph[third / m][third % m] = 0;
+                }
+                graph[second / m][second % m] = 0;
+            }
+            graph[first / m][first % m] = 0;
         }
     }
 
