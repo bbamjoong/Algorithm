@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -55,7 +53,7 @@ public class Main {
                         continue;
                     }
 
-                    bfs();
+                    update();
 
                     graph[third / m][third % m] = 0;
                 }
@@ -65,39 +63,30 @@ public class Main {
         }
     }
 
-    static void bfs() {
-        Queue<Node> q = new LinkedList<>();
-        addVirus(q);
-
-        while (!q.isEmpty()) {
-            Node poll = q.poll();
-            int x = poll.x;
-            int y = poll.y;
-
-            for (int i = 0; i < 4; i++) {
-                int nx = x + dx[i];
-                int ny = y + dy[i];
-
-                if (nx < 0 || ny < 0 || nx >= n || ny >= m) {
-                    continue;
-                }
-                if (graph[nx][ny] == 0) {
-                    graph[nx][ny] = 3;
-                    q.add(new Node(nx, ny));
+    static void update() {
+        for (int x = 0; x < n; x++) {
+            for (int y = 0; y < m; y++) {
+                if (graph[x][y] == 2) {
+                    dfs(x, y);
                 }
             }
         }
         calculateCnt();
-        initializeGraph();
     }
 
-    static void addVirus(Queue<Node> q) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (graph[i][j] == 2) {
-                    q.add(new Node(i, j));
-                }
+    static void dfs(int x, int y) {
+        int nx;
+        int ny;
+        for (int i = 0; i < 4; i++) {
+            nx = x + dx[i];
+            ny = y + dy[i];
+
+            if (nx < 0 || ny < 0 || nx >= n || ny >= m || graph[nx][ny] != 0) {
+                continue;
             }
+
+            graph[nx][ny] = 3;
+            dfs(nx, ny);
         }
     }
 
@@ -107,20 +96,12 @@ public class Main {
             for (int j = 0; j < m; j++) {
                 if (graph[i][j] == 0) {
                     bfs_cnt++;
-                }
-            }
-        }
-        ans = Math.max(ans, bfs_cnt);
-    }
-
-    static void initializeGraph() {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (graph[i][j] == 3) {
+                } else if (graph[i][j] == 3) {
                     graph[i][j] = 0;
                 }
             }
         }
+        ans = Math.max(ans, bfs_cnt);
     }
 
     static class Node {
