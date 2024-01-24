@@ -66,8 +66,6 @@ public class Main {
     }
 
     static void bfs() {
-        int[][] visited = new int[n][m];
-
         Queue<Node> q = new LinkedList<>();
         addVirus(q);
 
@@ -83,8 +81,7 @@ public class Main {
                 if (nx < 0 || ny < 0 || nx >= n || ny >= m) {
                     continue;
                 }
-                if (visited[nx][ny] == 0 && graph[nx][ny] == 0) {
-                    visited[nx][ny] = 1;
+                if (graph[nx][ny] == 0) {
                     graph[nx][ny] = 3;
                     q.add(new Node(nx, ny));
                 }
