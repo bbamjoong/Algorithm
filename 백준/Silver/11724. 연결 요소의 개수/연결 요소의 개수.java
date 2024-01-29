@@ -32,9 +32,13 @@ public class Main {
 
         for (int i = 1; i < n + 1; i++) {
             if (!visited[i]) {
-                dfs(i, 0);
-                cnt++;
-            
+                if (arr[i].isEmpty()) {
+                    cnt++;
+                    visited[i] = true;
+                } else {
+                    dfs(i, 0);
+                    cnt++;
+                }
             }
         }
         System.out.println(cnt);
