@@ -21,16 +21,9 @@ public class Main {
         }
 
         int n = Integer.parseInt(br.readLine());
-        turn = new int[n][2];
         StringTokenizer st;
-        for (int i = 0; i < n; i++) {
+        for (int t = 0; t < n; t++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < 2; j++) {
-                turn[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
-
-        for (int[] info : turn) {
             for (int i = 0; i < 3; i++) {
                 if (Objects.equals(arr[i].get(2), arr[i + 1].get(6))) {
                     same[i][1] = 1;
@@ -40,7 +33,9 @@ public class Main {
                     same[i + 1][0] = -1;
                 }
             }
-            change(info[0] - 1, info[1], 0);
+            int num = Integer.parseInt(st.nextToken()) - 1;
+            int dir = Integer.parseInt(st.nextToken());
+            change(num, dir, 0);
         }
         int score = getScore();
         System.out.println(score);
