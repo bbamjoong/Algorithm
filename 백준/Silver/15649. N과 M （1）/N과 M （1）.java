@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 public class Main {
     static int n, m;
     static int[] res;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -15,18 +16,17 @@ public class Main {
         m = Integer.parseInt(tokenizer.nextToken());
 
         res = new int[m];
-
         dfs(0);
 
-        reader.close();
+        System.out.println(sb.toString());
     }
 
     static void dfs(int index) {
         if (index == m) {
             for (int i = 0; i < m; i++) {
-                System.out.print(res[i] + " ");
+                sb.append(res[i]).append(" ");
             }
-            System.out.println();
+            sb.append("\n");
             return;
         }
 
