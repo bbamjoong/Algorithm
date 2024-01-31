@@ -3,38 +3,39 @@ import java.io.InputStreamReader;
 
 public class Main {
     static StringBuilder sb = new StringBuilder();
-    static int[] arr = new int[9];
-    static int[] res = new int[7];
-    static boolean flag;
+
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+        int[] arr = new int[9];
+        int sm = 0;
         for (int i = 0; i < 9; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
+            int a = Integer.parseInt(br.readLine());
+            arr[i] = a;
+            sm += a;
         }
 
-        dfs(0, 0, 0);
-        System.out.println(sb);
-    }
+        int idx1 = 0;
+        int idx2 = 0;
 
-    static void dfs(int start, int depth, int sm) {
-        if (depth == 7) {
-            if (sm == 100) {
-                flag = true;
-                for (int re : res) {
-                    sb.append(re).append("\n");
+        loop:
+        for (int i = 0; i < 9; i++) {
+            for (int j = i + 1; j < 9; j++) {
+                if (sm - arr[i] - arr[j] == 100) {
+                    idx1 = i;
+                    idx2 = j;
+
+                    for (int k = 0; k < 9; k++) {
+                        if (k != idx1 && k != idx2) {
+                            sb.append(arr[k]).append("\n");
+                        }
+                    }
+                    break loop;
                 }
             }
-            return;
         }
 
-        for (int i = start; i < arr.length; i++) {
-            res[depth] = arr[i];
-            dfs(i + 1, depth + 1, sm + arr[i]);
-            if (flag) {
-                return;
-            }
-        }
+        System.out.println(sb);
+
     }
 }
