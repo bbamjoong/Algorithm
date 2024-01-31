@@ -1,43 +1,63 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class Main {
-    static ArrayList<Integer> preOrder = new ArrayList<>();
     static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws Exception {
+    private static class Node {
+        int number;
+        Node left, right;
+
+        public Node(int number) {
+            this.number = number;
+        }
+
+        void insert(int input) {
+            if (this.number > input) {
+                if (this.left == null) {
+                    this.left = new Node(input);
+                } else {
+                    this.left.insert(input);
+                }
+            } else {
+                if (this.right == null) {
+                    this.right = new Node(input);
+                } else {
+                    this.right.insert(input);
+                }
+            }
+
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String input;
-        while (true) {
-            input = br.readLine();
+        Node root = new Node(Integer.parseInt(br.readLine())); // 루트
+
+        while (true) { // 나머지 노드 삽입
+            String input = br.readLine();
             if (input == null || input.isEmpty()) {
                 break;
             }
-            preOrder.add(Integer.parseInt(input));
+
+            int num = Integer.parseInt(input);
+            root.insert(num);
         }
-        changeToPostOrder(0, preOrder.size() - 1);
+
+        changeToPostOrder(root);
 
         System.out.println(sb);
     }
 
-    static void changeToPostOrder(int start, int end) {
-        if (start > end) {
-            return;
+    static void changeToPostOrder(Node node) {
+        if (node.left != null) { // 왼쪽
+            changeToPostOrder(node.left);
         }
-
-        int rightStart = end + 1;
-
-        for (int i = start; i < rightStart; i++) {
-            if (preOrder.get(start) < preOrder.get(i)) {
-                rightStart = i;
-                break;
-            }
+        if (node.right != null) { // 오른쪽
+            changeToPostOrder(node.right);
         }
-
-        changeToPostOrder(start + 1, rightStart - 1);
-        changeToPostOrder(rightStart, end);
-        sb.append(preOrder.get(start) + "\n");
+        sb.append(node.number).append("\n"); // 부모
     }
 }
