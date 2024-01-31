@@ -5,6 +5,7 @@ public class Main {
     static StringBuilder sb = new StringBuilder();
     static int[] arr = new int[9];
     static int[] res = new int[7];
+    static boolean flag;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,6 +21,7 @@ public class Main {
     static void dfs(int start, int depth, int sm) {
         if (depth == 7) {
             if (sm == 100) {
+                flag = true;
                 for (int re : res) {
                     sb.append(re).append("\n");
                 }
@@ -30,6 +32,9 @@ public class Main {
         for (int i = start; i < arr.length; i++) {
             res[depth] = arr[i];
             dfs(i + 1, depth + 1, sm + arr[i]);
+            if (flag) {
+                return;
+            }
         }
     }
 }
