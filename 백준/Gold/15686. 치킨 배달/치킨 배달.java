@@ -61,7 +61,7 @@ public class Main {
                 tmp = Math.min(calculateDist(home, chickenList.get(i)), tmp);
             }
             cnt += tmp;
-            if (tmp >= ans) {
+            if (cnt >= ans) {
                 return;
             }
         }
