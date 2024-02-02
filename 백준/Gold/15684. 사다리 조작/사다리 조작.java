@@ -53,25 +53,19 @@ public class Main {
         }
 
         for (int i = x; i < h; i++) {
-            int k;
-            // 바로 전 사다리를 설치한 줄과 같은 줄에서 탐색하면
-            // 2칸 오른쪽에서 탐색
-            if (i == x) { 
-                k = y;
-            } else {
-                k = 0;
-            }
-            for (int j = k; j < n - 1; j++) {
+            for (int j = y; j < n - 1; j++) {
                 if (graph[i][j] == 0 && graph[i][j + 1] == 0) {
                     graph[i][j] = -1;
                     graph[i][j + 1] = 1;
 
+                    //사다리 설치 후 2칸 뒤부터 탐색
                     dfs(radderCnt + 1, i, j + 2);
 
                     graph[i][j] = 0;
                     graph[i][j + 1] = 0;
                 }
             }
+            y = 0; // 다음 행으로 넘어갈 때 0열 부터 탐색
         }
 
     }
@@ -80,16 +74,13 @@ public class Main {
         for (int i = 0; i < n; i++) {
             int x = 0;
             int y = i;
-            while (x < h) {
+            while (x != h) {
                 if (graph[x][y] == -1) {
-                    x++;
                     y++;
                 } else if (graph[x][y] == 1) {
-                    x++;
                     y--;
-                } else if (graph[x][y] == 0) {
-                    x++;
                 }
+                x++;
             }
             if (i != y) {
                 return false;
