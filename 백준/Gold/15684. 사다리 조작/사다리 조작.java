@@ -8,7 +8,6 @@ public class Main {
     static int h;
     static int[][] graph;
     static StringBuilder sb = new StringBuilder();
-    static int ans = (int) 1e9;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,27 +31,24 @@ public class Main {
             System.out.println(sb);
             return;
         } else {
-            dfs(0, 0, 0);
+            for (int i = 0; i <= 3; i++) {
+                if (dfs(0, 0, 0, i)) {
+                    return;
+                }
+            }
         }
-
-        if (ans > 3) {
-            ans = -1;
-        }
-        sb.append(ans);
+        sb.append(-1);
         System.out.println(sb);
     }
 
-    private static void dfs(int radderCnt, int x, int y) {
-        if (radderCnt > 3) { // 사다리 개수가 3개 넘으면 안된다.
-            return;
-        }
-
-        if (radderCnt >= ans) { // 현재 답보다 더 많은 개수 설치하려고 하면 안된다.
-            return;
-        }
-
-        if (checkResult()) { // 검사 시 true라면 ans 갱신
-            ans = Math.min(ans, radderCnt);
+    private static boolean dfs(int x, int y, int cnt, int size) {
+        if (cnt == size) {
+            if (checkResult()) {
+                sb.append(size);
+                System.out.println(sb);
+                return true;
+            }
+            return false;
         }
 
         for (int i = x; i < h; i++) {
@@ -61,7 +57,9 @@ public class Main {
                     graph[i][j] = -1;
                     graph[i][j + 1] = 1;
 
-                    dfs(radderCnt + 1, i, j + 2);
+                    if (dfs(i, j + 2, cnt + 1, size)) {
+                        return true;
+                    }
 
                     graph[i][j] = 0;
                     graph[i][j + 1] = 0;
@@ -69,6 +67,7 @@ public class Main {
             }
             y = 0;
         }
+        return false;
     }
 
     static boolean checkResult() { // 원래 자기 사다리로 골인하는지??
@@ -92,7 +91,7 @@ public class Main {
     }
 
     static int findNeedLadderNum() { // 자기 자신의 줄에 사다리가 짝수개가 걸려있어야 한다.
-        int cnt = 0;
+        int oddNum = 0;
         for (int j = 0; j < n - 1; j++) {
             int num = 0;
             for (int i = 0; i < Main.h; i++) {
@@ -101,9 +100,9 @@ public class Main {
                 }
             }
             if (num % 2 == 1) {
-                cnt++;
+                oddNum++;
             }
         }
-        return cnt;
+        return oddNum;
     }
 }
