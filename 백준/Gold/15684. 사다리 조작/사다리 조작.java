@@ -8,6 +8,7 @@ public class Main {
     static int h;
     static int[][] graph;
     static StringBuilder sb = new StringBuilder();
+    static int ans = (int) 1e9;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,7 +33,10 @@ public class Main {
             return;
         } else {
             for (int i = 0; i <= 3; i++) {
-                if (dfs(0, 0, 0, i)) {
+                dfs(0, 0, 0, i);
+                if (ans == i) {
+                    sb.append(ans);
+                    System.out.println(ans);
                     return;
                 }
             }
@@ -41,14 +45,12 @@ public class Main {
         System.out.println(sb);
     }
 
-    private static boolean dfs(int x, int y, int cnt, int size) {
+    static void dfs(int x, int y, int cnt, int size) {
         if (cnt == size) {
             if (checkResult()) {
-                sb.append(size);
-                System.out.println(sb);
-                return true;
+                ans = size;
             }
-            return false;
+            return;
         }
 
         for (int i = x; i < h; i++) {
@@ -57,8 +59,9 @@ public class Main {
                     graph[i][j] = -1;
                     graph[i][j + 1] = 1;
 
-                    if (dfs(i, j + 2, cnt + 1, size)) {
-                        return true;
+                    dfs(i, j + 2, cnt + 1, size);
+                    if (ans == size) {
+                        return;
                     }
 
                     graph[i][j] = 0;
@@ -67,7 +70,6 @@ public class Main {
             }
             y = 0;
         }
-        return false;
     }
 
     static boolean checkResult() { // 원래 자기 사다리로 골인하는지??
