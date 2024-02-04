@@ -13,6 +13,45 @@ public class Main {
     static int[] dy = {-1, 1, 0, 0};
 
     public static void main(String[] args) throws IOException {
+        setInputs();
+
+        int ans = 0;
+
+        while (true) {
+            visited = new boolean[n][n]; // 방문 배열
+            boolean stop = true; // 멈출거니..?
+
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (!visited[i][j]) {
+                        LinkedList<Pos> arr = bfs(i, j); // bfs를 통해 인구를 이동할 지역들을 받아온다.
+
+                        if (arr.size() > 1) { // 이동할거니?
+                            stop = false; // 이동할거면 멈추지 않을게
+
+                            int sum = 0;
+                            for (Pos pos : arr) { // 이동할 지역들의 합, 평균 구하기
+                                sum += graph[pos.x][pos.y];
+                            }
+                            int avg = sum / arr.size();
+
+                            for (Pos pos : arr) { // 이동할 지역들을 평균 값으로 갱신
+                                graph[pos.x][pos.y] = avg;
+                            }
+                        }
+                    }
+                }
+            }
+            if (stop) {
+                break;
+            }
+            ans++; // 다음 회차로 넘어가
+        }
+
+        System.out.println(ans);
+    }
+
+    static void setInputs() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
@@ -29,72 +68,46 @@ public class Main {
                 graph[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-
-        int ans = 0;
-
-        while (true) {
-            visited = new boolean[n][n];
-            boolean stop = true;
-
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (!visited[i][j]) {
-                        LinkedList<int[]> arr = bfs(i, j);
-
-                        if (arr.size() > 1) {
-                            stop = false;
-
-                            int sum = 0;
-                            for (int[] pos : arr) {
-                                sum += graph[pos[0]][pos[1]];
-                            }
-                            int avg = sum / arr.size();
-                            
-                            for (int[] pos : arr) {
-                                graph[pos[0]][pos[1]] = avg;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (stop) {
-                break;
-            }
-
-            ans++;
-        }
-
-        System.out.println(ans);
     }
 
-    static LinkedList<int[]> bfs(int a, int b) {
-        Queue<int[]> q = new LinkedList<>();
-        LinkedList<int[]> tmp = new LinkedList<>();
+    static LinkedList<Pos> bfs(int a, int b) {
+        Queue<Pos> q = new LinkedList<>();
+        LinkedList<Pos> tmp = new LinkedList<>();
 
-        q.add(new int[]{a, b});
+        q.add(new Pos(a, b));
         visited[a][b] = true;
-        tmp.add(new int[]{a, b});
+        tmp.add(new Pos(a, b));
 
         while (!q.isEmpty()) {
-            int[] pos = q.poll();
-            int x = pos[0];
-            int y = pos[1];
+            Pos pos = q.poll();
+            int x = pos.x;
+            int y = pos.y;
 
             for (int i = 0; i < 4; i++) {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
 
-                if (0 <= nx && nx < n && 0 <= ny && ny < n && !visited[nx][ny]) {
-                    if (l <= Math.abs(graph[nx][ny] - graph[x][y]) && Math.abs(graph[nx][ny] - graph[x][y]) <= r) {
+                if (0 <= nx && nx < n && 0 <= ny && ny < n && !visited[nx][ny]) { // 범위 내이고 아직 방문하지 않은 곳이고
+                    if (l <= Math.abs(graph[nx][ny] - graph[x][y])
+                            && Math.abs(graph[nx][ny] - graph[x][y]) <= r) { // 차이가 l~r 범위 이내이면
                         visited[nx][ny] = true;
-                        q.add(new int[]{nx, ny});
-                        tmp.add(new int[]{nx, ny});
+                        q.add(new Pos(nx, ny));
+                        tmp.add(new Pos(nx, ny));
                     }
                 }
             }
         }
 
         return tmp;
+    }
+
+    static class Pos {
+        int x;
+        int y;
+
+        public Pos(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
