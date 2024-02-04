@@ -1,7 +1,3 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
-
 public class Main {
 
     static int n;
@@ -68,32 +64,57 @@ public class Main {
         }
     }
 
-    static void setInputs() throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static final int BUFFER_SIZE = 1 << 13;
+    static byte[] buffer = new byte[BUFFER_SIZE];
+    static int bufferLen, bufferIdx;
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        k = Integer.parseInt(st.nextToken());
+    static int nextInt() throws Exception { // Int 입력
+        byte b;
+        int n = 0;
+        while ((b = read()) <= 32)
+            ;
+        do {
+            n = (n << 3) + (n << 1) + (b & 15);
+        } while (isNumber(b = read()));
+
+        return n;
+    }
+
+    static boolean isNumber(byte b) {
+        return 47 < b && b < 58;
+    }
+
+    static byte read() throws Exception {
+        if (bufferIdx == bufferLen) {
+            bufferLen = System.in.read(buffer, bufferIdx = 0, BUFFER_SIZE);
+            if (bufferLen == -1) {
+                buffer[0] = -1;
+            }
+        }
+        return buffer[bufferIdx++];
+    }
+
+    static void setInputs() throws Exception {
+        n = nextInt();
+        m = nextInt();
+        k = nextInt();
 
         winterFood = new int[n][n];
         soil = new int[n][n];
         trees = new Tree[n][n];
 
         for (int r = 0; r < n; r++) {
-            st = new StringTokenizer(br.readLine());
             for (int c = 0; c < n; c++) {
-                winterFood[r][c] = Integer.parseInt(st.nextToken());
+                winterFood[r][c] = nextInt();
                 soil[r][c] = 5;
                 trees[r][c] = new Tree();
             }
         }
 
         for (int i = 0; i < m; i++) {
-            st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken()) - 1;
-            int y = Integer.parseInt(st.nextToken()) - 1;
-            int z = Integer.parseInt(st.nextToken());
+            int x = nextInt() - 1;
+            int y = nextInt() - 1;
+            int z = nextInt();
 
             trees[x][y].add(new Tree(z));
         }
