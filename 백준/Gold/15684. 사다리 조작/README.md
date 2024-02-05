@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 14344 KB, 시간: 128 ms
+메모리: 13140 KB, 시간: 88 ms
 
 ### 분류
 
@@ -12,17 +12,17 @@
 
 ### 제출 일자
 
-2024년 2월 2일 12:06:51
+2024년 2월 5일 23:51:14
 
 ### 문제 설명
 
 <p>사다리 게임은 N개의 세로선과 M개의 가로선으로 이루어져 있다. 인접한 세로선 사이에는 가로선을 놓을 수 있는데, 각각의 세로선마다 가로선을 놓을 수 있는 위치의 개수는 H이고, 모든 세로선이 같은 위치를 갖는다. 아래 그림은 N = 5, H = 6 인 경우의 그림이고, 가로선은 없다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/15684/1.png" style="width: 390px; height: 300px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 390px; height: 300px;"></p>
 
 <p>초록선은 세로선을 나타내고, 초록선과 점선이 교차하는 점은 가로선을 놓을 수 있는 점이다. 가로선은 인접한 두 세로선을 연결해야 한다. 단, 두 가로선이 연속하거나 서로 접하면 안 된다. 또, 가로선은 점선 위에 있어야 한다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/15684/2.png" style="width: 390px; height: 300px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 390px; height: 300px;"></p>
 
 <p>위의 그림에는 가로선이 총 5개 있다. 가로선은 위의 그림과 같이 인접한 두 세로선을 연결해야 하고, 가로선을 놓을 수 있는 위치를 연결해야 한다.</p>
 
@@ -33,8 +33,8 @@
 <table class="table table table-bordered" style="width: 100%;">
 	<tbody>
 		<tr>
-			<td style="width: 50%; text-align: center;"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/15684/3.png" style="width: 390px; height: 300px;"></td>
-			<td style="width: 50%; text-align: center;"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/15684/4.png" style="width: 390px; height: 300px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 390px; height: 300px;"></td>
+			<td style="width: 50%; text-align: center;"><img alt="" src="" style="width: 390px; height: 300px;"></td>
 		</tr>
 		<tr>
 			<td style="width: 50%; text-align: center;">1번 세로선</td>
