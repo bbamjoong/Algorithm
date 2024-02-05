@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -21,11 +20,7 @@ public class Main {
                 arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-
         dp = new int[n][(1 << n) - 1]; // 열은 활성화된 비트에 따라 구성된다. 0000 ~ 1111;
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(dp[i], -1);
-        }
 
         System.out.println(dfs(0, 1));
     }
@@ -37,7 +32,7 @@ public class Main {
             }
             return arr[now][0];
         }
-        if (dp[now][visited] != -1) { // 이미 최소값이 있으면 return;
+        if (dp[now][visited] != 0) { // 이미 최소값이 있으면 return;
             return dp[now][visited];
         }
 
