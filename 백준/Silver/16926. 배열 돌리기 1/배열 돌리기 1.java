@@ -29,20 +29,20 @@ public class Main {
         }
 
         int squareCnt = Math.min(n, m) / 2;
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < squareCnt; j++) {
+        for (int i = 0; i < squareCnt; i++) {
+            for (int j = 0; j < r % (((n - 1) + (m - 1)) * 2); j++) {
                 rotate();
-                startX++;
-                startY++;
-                n -= 2;
-                m -= 2;
             }
-            startX -= squareCnt;
-            startY -= squareCnt;
-            n += 2 * squareCnt;
-            m += 2 * squareCnt;
+            startX++;
+            startY++;
+            n -= 2;
+            m -= 2;
         }
-
+        startX -= squareCnt;
+        startY -= squareCnt;
+        n += 2 * squareCnt;
+        m += 2 * squareCnt;
+        
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 sb.append(matrix[i][j]).append(" ");
