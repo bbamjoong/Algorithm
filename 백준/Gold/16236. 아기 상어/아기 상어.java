@@ -117,12 +117,19 @@ public class Main {
                 visited[nx][ny] = true;
                 int moveCnt = cnt + 1;
 
+                // standard보다 움직인 횟수가 많아지면 bfs를 종료한다. -> bfs는 너비탐색이라 움직인 횟수가 동일한 경우를 모두 탐색하고, 움직인 횟수가 더 큰 것을 탐색하기 때문이다.
+                if (rightFishPosition != null && moveCnt > standard) {
+                    break;
+                }
+
                 // 물고기가 상어보다 작으면 먹을 수 있음(같으면 못먹음)
                 if (0 < arr[nx][ny] && arr[nx][ny] < shark.size) {
                     if (standard == 0) { // 처음 물고기를 먹을 예정임
                         standard = moveCnt; // 거리 기준 정해주고
                         rightFishPosition = new Position(nx, ny, moveCnt); // 먹을 후보!
-                    } else if (moveCnt == standard) { // 거리 기준과 움직인 횟수가 같으면
+                        continue;
+                    }
+                    if (moveCnt == standard) { // 거리 기준과 움직인 횟수가 같으면
                         if (rightFishPosition.x < nx) { // 기존 물고기가 더 위에 있으면 유지
                             continue;
                             // 새 먹이가 기존 물고기와 높이가 같을 때, 왼쪽에 있으면 교체
