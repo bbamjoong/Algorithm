@@ -53,7 +53,7 @@ public class Main {
 
         for (int x = 0; x < r; x++) {
             for (int y = 0; y < c; y++) {
-                if (arr[x][y] >= 5) { // 퍼질 수 있는 먼지가 존재하면
+                if (arr[x][y] > 0) { // 퍼질 수 있는 먼지가 존재하면
                     int dustAmount = arr[x][y];
                     int alreadySpreadAmount = 0;
                     for (int i = 0; i < 4; i++) { // 4방향 탐색
@@ -73,8 +73,6 @@ public class Main {
                     tmpArr[x][y] += dustAmount - alreadySpreadAmount;
                 } else if (arr[x][y] == -1) { // 청소기 복제
                     tmpArr[x][y] = -1;
-                } else if (arr[x][y] > 0) { // 1 ~ 4는 탐색 안해도됨
-                    tmpArr[x][y] += arr[x][y];
                 }
             }
         }
