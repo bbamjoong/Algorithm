@@ -14,6 +14,7 @@ public class Main {
 
         graph = new int[n + 1][n + 1];
         visited = new boolean[n + 1];
+        visited[1] = true;
 
         StringTokenizer st;
         for (int i = 1; i < n + 1; i++) {
@@ -22,7 +23,7 @@ public class Main {
                 graph[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        dfs(0, 0);
+        dfs(1, 1);
         StringBuilder sb = new StringBuilder();
         sb.append(ans);
         System.out.println(ans);
@@ -46,7 +47,6 @@ public class Main {
         int cntEnd = 0;
 
         for (int i = 1; i < n; i++) {
-            loop:
             for (int j = i + 1; j < n + 1; j++) {
                 if (visited[i] && visited[j]) {
                     cntStart += graph[i][j];
