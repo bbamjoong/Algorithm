@@ -38,20 +38,9 @@ public class Main {
                         arr[i - 1] = arr[j];
                         arr[j] = tmp;
 
-                        // 앞쪽
-                        int[] frontArr = new int[i];
-                        for (int idx = 0; idx < frontArr.length; idx++) {
-                            sb.append(arr[idx]).append(" ");
-                        }
+                        Arrays.sort(arr, i, n);
 
-                        // 뒤쪽
-                        int[] backArr = new int[n - i];
-                        for (int idx = 0; idx < backArr.length; idx++) {
-                            backArr[idx] = arr[i + idx];
-                        }
-                        Arrays.sort(backArr);
-
-                        for (int value : backArr) {
+                        for (int value : arr) {
                             sb.append(value).append(" ");
                         }
 
