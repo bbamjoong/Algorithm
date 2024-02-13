@@ -18,8 +18,8 @@ public class Main {
         }
         if (n < 0) {
             System.out.println(-1);
-            return;
+        } else {
+            System.out.println(res);
         }
-        System.out.println(res);
     }
 }
