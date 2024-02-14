@@ -30,14 +30,14 @@ public class Main {
             return;
         }
 
-        int newSize = size / 2;
+        size /= 2;
 
         sb.append('(');
 
-        QuadTree(x, y, newSize);
-        QuadTree(x, y + newSize, newSize);
-        QuadTree(x + newSize, y, newSize);
-        QuadTree(x + newSize, y + newSize, newSize);
+        QuadTree(x, y, size);
+        QuadTree(x, y + size, size);
+        QuadTree(x + size, y, size);
+        QuadTree(x + size, y + size, size);
 
         sb.append(')');
 
