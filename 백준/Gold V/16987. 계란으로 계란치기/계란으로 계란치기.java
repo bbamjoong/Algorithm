@@ -19,23 +19,6 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        n = Integer.parseInt(br.readLine());
-
-        for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            int durability = Integer.parseInt(st.nextToken()); // 계란의 내구도
-            int weight = Integer.parseInt(st.nextToken()); // 계란의 무게
-            eggs.add(new Egg(durability, weight));
-        }
-
-        eggAttack(0, 0); // 0번째 계란부터 시작 , 이 땐 깨진 계란 0개
-
-        System.out.println(ans);
-    }
-
     static void eggAttack(int idx, int cnt) {
         if (idx == n) {
             ans = Math.max(ans, cnt);
@@ -74,8 +57,7 @@ public class Main {
             cnt = beforeRecoveryCnt;
         }
     }
-
-
+    
     static void eggFight(Egg handEgg, Egg targetEgg) {
         targetEgg.durability -= handEgg.weight;
         handEgg.durability -= targetEgg.weight;
@@ -86,4 +68,20 @@ public class Main {
         handEgg.durability += targetEgg.weight;
     }
 
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        n = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            int durability = Integer.parseInt(st.nextToken()); // 계란의 내구도
+            int weight = Integer.parseInt(st.nextToken()); // 계란의 무게
+            eggs.add(new Egg(durability, weight));
+        }
+
+        eggAttack(0, 0); // 0번째 계란부터 시작 , 이 땐 깨진 계란 0개
+
+        System.out.println(ans);
+    }
 }
