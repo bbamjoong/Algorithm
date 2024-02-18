@@ -1,7 +1,5 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,14 +11,14 @@ public class Main {
     static int[] people;
     static int ans = Integer.MAX_VALUE;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         setInputs();
         gerrymandering();
 
         System.out.println(ans);
     }
 
-    static void setInputs() throws IOException {
+    static void setInputs() throws Exception {
         n = Integer.parseInt(br.readLine());
         graph = new int[n][n];
 
