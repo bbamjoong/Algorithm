@@ -1,5 +1,5 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.*;
 
 // 완전탐색 시 10^5 * 10^5 => 시간초과
 // 경로 압축이 필요함
