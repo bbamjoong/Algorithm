@@ -2,11 +2,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
     static ArrayList<Character> vowel = new ArrayList<>(Arrays.asList('a', 'e', 'i', 'o', 'u'));
-    static ArrayList<String> arr;
+    static ArrayList<String> arr = new ArrayList<>();
     static ArrayList<Character> res = new ArrayList<>();
     static int n, m;
 
@@ -15,7 +17,11 @@ public class Main {
         n = Integer.parseInt(nm[0]);
         m = Integer.parseInt(nm[1]);
 
-        arr = new ArrayList<>(Arrays.asList(br.readLine().split(" ")));
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < m; i++) {
+            arr.add(st.nextToken());
+        }
+
         arr.sort(String::compareTo);
 
         dfs();
