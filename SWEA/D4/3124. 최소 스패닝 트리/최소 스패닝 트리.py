@@ -22,10 +22,13 @@ for tc in range(1, t+1):
     graph.sort(key = lambda x : x[2]) # 가중치를 기준으로 정렬
     parent = [i for i in range(v+1)];
     ans = 0;
-    
+    cnt = 0; # 센 정점의 개수
     for start, end, weight in graph:
         if (find(start) != find(end)):
             union(start, end);
             ans+= weight;
+            
+            if cnt == v-1:
+                break
     
     print(f"#{tc} {ans}")
