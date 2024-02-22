@@ -5,7 +5,8 @@ input = sys.stdin.readline;
 def find(x):
     if x == parent[x]:
         return x;
-    return find(parent[x]);
+    parent[x] = find(parent[x])
+    return parent[x];
 
 
 def union(a, b):
@@ -48,13 +49,13 @@ if __name__ == "__main__":
         a = node.x;
         b = node.y;
 
-        if a < right:
+        if a < right: # 앞에서 부쉈던 벽보다 시작점이 왼쪽이면 a를 옮김
             a = right;
 
         for i in range(a, b + 1):
             union(a, i);
 
-        if b > right:
+        if b > right: # 가장 큰 방의 번호 갱신
             right = b;
 
     cnt = 0;
