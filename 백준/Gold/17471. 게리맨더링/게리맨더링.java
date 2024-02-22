@@ -1,6 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -9,131 +9,100 @@ public class Main {
 
     static int n;
     static int[] peopleCnt;
-    static HashSet<Integer>[] edgeList;
-
-    static boolean[] visited;
-
-    static int ans = (int) 1e9;
+    static ArrayList<Integer>[] edgeList;
+    static boolean[] groupsInfo;
+    static int totalSum;
+    static int ans = Integer.MAX_VALUE;
     static int tmpCnt;
-
-
-    static int cnt = 0;
-
 
     public static void main(String[] args) throws Exception {
         n = Integer.parseInt(br.readLine());
-
         peopleCnt = new int[n + 1];
         st = new StringTokenizer(br.readLine());
+
         for (int i = 1; i < n + 1; i++) {
-            peopleCnt[i] = Integer.parseInt(st.nextToken());
+            int count = Integer.parseInt(st.nextToken());
+            peopleCnt[i] = count;
+            totalSum += count;
         }
 
-        edgeList = new HashSet[n + 1];
-        for (int i = 0; i < n + 1; i++) {
-            edgeList[i] = new HashSet<>();
+        edgeList = new ArrayList[n + 1];
+        for (int i = 1; i < n + 1; i++) {
+            edgeList[i] = new ArrayList<>();
         }
 
-        visited = new boolean[n + 1];
+        groupsInfo = new boolean[n + 1];
 
         for (int i = 1; i < n + 1; i++) {
             st = new StringTokenizer(br.readLine());
             int range = Integer.parseInt(st.nextToken());
             for (int j = 0; j < range; j++) {
-                int num = Integer.parseInt(st.nextToken()); // 연결되는 정점의 정보
+                int num = Integer.parseInt(st.nextToken());
                 edgeList[i].add(num);
-                edgeList[num].add(i);
             }
         }
 
         int range = n / 2;
-        for (int size = 1; size <= range; size++) {// range = n/2 -> nC1 ... nCn/2까지 조합을 뽑습니다.
+        for (int size = 1; size <= range; size++) {
             combination(0, size, 1);
         }
 
-        if (ans == (int) 1e9) {
+        if (ans == Integer.MAX_VALUE) {
             System.out.println(-1);
-            return;
+        } else {
+            System.out.println(ans);
         }
-        System.out.println(ans);
     }
 
-    static void combination(int depth, int size, int idx) {
+    static void combination(int depth, int size, int index) {
         if (depth == size) {
-            boolean[] tmpVisitedA = visited.clone();
-            boolean[] tmpVisitedB = visited.clone();
-            if (checkA(tmpVisitedA, n - size) && checkB(tmpVisitedB, size)) { // 올바르게 나누어졌다면
-                //답을 구해야합니다.
+            if (checkGroup(size, true) && checkGroup(n - size, false)) {
                 calculateAnswer();
             }
             return;
         }
 
-        for (int i = idx; i < n + 1; i++) {
-            visited[i] = true;
+        for (int i = index; i < n + 1; i++) {
+            groupsInfo[i] = true;
             combination(depth + 1, size, i + 1);
-            visited[i] = false;
+            groupsInfo[i] = false;
         }
     }
 
-    static boolean checkA(boolean[] tmpVisited, int size) {
-        // false인 곳 아무데서나 시작
-        for (int node = 1; node < tmpVisited.length; node++) {
-            if (!tmpVisited[node]) {
+    static boolean checkGroup(int size, boolean type) {
+        boolean[] visited = new boolean[n + 1];
+
+        for (int node = 1; node < groupsInfo.length; node++) {
+            if (groupsInfo[node] == type) { // 조건에 맞는 가장 처음 노드 확인
                 tmpCnt = 0;
-                tmpVisited[node] = true;
-                checkCnt(tmpVisited, 1, node);
-                tmpVisited[node] = false;
-                break;
+                calculateGroupSize(1, node, type, visited);
+                break; // 더 이상 다음 노드를 확인할 필요가 없음
             }
         }
-
         return tmpCnt == size;
     }
 
-    static boolean checkB(boolean[] tmpVisited, int size) {
-        // false인 곳 아무데서나 시작
-        for (int i = 1; i < tmpVisited.length; i++) {
-            tmpVisited[i] = !tmpVisited[i];
-        }
-
-        for (int node = 1; node < tmpVisited.length; node++) {
-            if (!tmpVisited[node]) {
-                tmpCnt = 0;
-                tmpVisited[node] = true;
-                checkCnt(tmpVisited, 1, node);
-                tmpVisited[node] = false;
-                break;
-            }
-        }
-
-        return tmpCnt == size;
-    }
-
-
-    static void checkCnt(boolean[] tmpVisited, int cnt, int node) {
-        tmpCnt++;
+    static void calculateGroupSize(int count, int node, boolean type, boolean[] visited) {
+        tmpCnt++; // 방문헀으므로 cnt++
+        visited[node] = true; // 방문처리
 
         for (Integer next : edgeList[node]) {
-            if (!tmpVisited[next]) { // 방문 안했으면
-                tmpVisited[next] = true;
-                checkCnt(tmpVisited, cnt + 1, next);
+            if (groupsInfo[next] == type && !visited[next]) { // 다음 노드가 검색할 type과 같고 + 방문하지 않은 곳이면
+                calculateGroupSize(count + 1, next, type, visited); // 다음 노드 방문
             }
         }
-
     }
 
     static void calculateAnswer() {
-        int trueAns = 0;
-        int falseAns = 0;
+        int countA = 0;
+        int countB = 0;
         for (int i = 1; i < n + 1; i++) {
-            if (visited[i]) {
-                trueAns += peopleCnt[i];
+            if (groupsInfo[i]) {
+                countA += peopleCnt[i];
             } else {
-                falseAns += peopleCnt[i];
+                countB += peopleCnt[i];
             }
         }
-
-        ans = Math.min(ans, Math.abs(trueAns - falseAns));
+        ans = Math.min(ans, Math.abs(countA - countB));
     }
 }
