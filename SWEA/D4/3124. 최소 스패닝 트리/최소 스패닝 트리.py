@@ -1,34 +1,40 @@
+import heapq
+
 t = int(input())
 
-def find(x):
-    if parent[x] == x:
-        return x;
-    parent[x] = find(parent[x])
-    return parent[x]
+def prim(start):
+    global ans, cnt
+    pq = []
+    heapq.heappush(pq, [0, start])
 
-def union(a, b):
-    a = find(a);
-    b = find(b);
+    while cnt < v:
+        weight, now = heapq.heappop(pq);
+
+        if visited[now]:
+            continue;
     
-    if a < b:
-        parent[b] = a;
-        return
-    parent[a] = b;
+        visited[now] = True;
+        cnt += 1;
+        ans += weight;
+    
+        for getNode in graph[now]:
+            weight, next = getNode;
+            if not visited[next]:
+                heapq.heappush(pq, getNode);
 
 
-for tc in range(1, t+1):
+for tc in range(1, t + 1):
     v, e = map(int, input().split())
-    graph = [list(map(int, input().split())) for _ in range(e)]
-    graph.sort(key = lambda x : x[2]) # 가중치를 기준으로 정렬
-    parent = [i for i in range(v+1)];
+
+    graph = [[] for _ in range(v + 1)]  # 정점의 개수 + 1
+    visited = [False for _ in range(v + 1)]
+    for _ in range(e):
+        a, b, c = map(int, input().split())
+        graph[a].append([c, b])
+        graph[b].append([c, a])
+
     ans = 0;
-    cnt = 0; # 센 정점의 개수
-    for start, end, weight in graph:
-        if (find(start) != find(end)):
-            union(start, end);
-            ans+= weight;
-            
-            if cnt == v-1:
-                break
-    
+    cnt = 0;
+    prim(1);
+
     print(f"#{tc} {ans}")
