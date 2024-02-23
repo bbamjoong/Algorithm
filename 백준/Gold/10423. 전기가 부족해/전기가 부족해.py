@@ -18,33 +18,35 @@ def find(x):
 
 
 def union(a, b):
+    global cnt
     a = find(a);
     b = find(b);
 
+    if a == b:
+        return;
+
+    # 어떤 노드의 부모가 0으로 바뀌게 되면 cnt를 증가시켜줍니다.
+    if a == 0 or b == 0:
+        cnt += 1
+
     if a < b:
         parent[b] = a;
-        return;
-    parent[a] = b;
+    elif a > b:
+        parent[a] = b;
 
-
-def isAllConnected():  # 모든 노드의 부모가 0이면 참입니다.
-    for i in range(n + 1):
-        if (parent[i] != 0):
-            return False;
-    return True;
 
 parent = [i for i in range(n + 1)]
-
 for i in powerplants:  # 발전소는 노드를 0으로 잡겠습니다.
     parent[i] = 0
 
+cnt = len(powerplants)  # cnt는 parent[index] = 0인 곳들의 count
 ans = 0;
 for start, end, weight in arr:
-    if (find(start) != find(end)):
+    if find(start) != find(end):
         union(start, end)
         ans += weight;
 
-        if isAllConnected(): # 모두 연결이 되어있으면 break 합니다.
+        if cnt == n:  # 모두 연결이 되어있으면 break 합니다.
             break;
-            
+
 print(ans);
