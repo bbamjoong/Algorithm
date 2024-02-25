@@ -40,10 +40,10 @@ for next_x1, next_x2, next_y, next_idx in logs:
     if next_x1 <= first_x2:  # 겹치면
         union(first_idx, next_idx)
 
-    # 정보 갱신
-    # 1. 다음으로 나아갈 수 있는 조건이면
-    if next_x2 >= first_x2:
-        first_x1, first_x2, first_y, first_idx = next_x1, next_x2, next_y, next_idx
+        # 정보 갱신
+        # 1. 다음으로 나아갈 수 있는 조건이면
+        if next_x2 >= first_x2:
+            first_x1, first_x2, first_y, first_idx = next_x1, next_x2, next_y, next_idx
 
     # 2. 다음으로 나아갈 수 없으면 first정보 유지
 
