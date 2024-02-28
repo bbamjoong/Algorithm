@@ -78,13 +78,13 @@ public class Main {
                 }
 
                 // 빈 칸을 만남. 방문한 적 없음
-                if (arr[nx][ny] == 0 && !visited[nx][ny][0] && wall == 0) {
+                else if (arr[nx][ny] == 0 && !visited[nx][ny][0] && wall == 0) {
                     visited[nx][ny][0] = true;
                     q.add(new Node(nx, ny, wall, cnt + 1));
                 }
 
                 // 빈 칸을 만남. 벽을 이미 깼음
-                if (arr[nx][ny] == 0 && !visited[nx][ny][1] && wall == 1) {
+                else if (arr[nx][ny] == 0 && !visited[nx][ny][1] && wall == 1) {
                     visited[nx][ny][1] = true;
                     q.add(new Node(nx, ny, wall, cnt + 1));
                 }
