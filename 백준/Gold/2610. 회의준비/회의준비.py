@@ -1,14 +1,11 @@
 import sys
-
 input = sys.stdin.readline
-
 
 def find(x):
     if parent[x] == x:
         return x
     parent[x] = find(parent[x])
     return parent[x]
-
 
 def union(a, b):
     a = find(a)
@@ -61,7 +58,7 @@ for elements in sets.values():
                 maxElement = floyd[i][j]
                 tmpIdx = i
 
-        if maxElement < tmpMin:
+        if maxElement <= tmpMin:
             tmpMin = maxElement
             idx = tmpIdx
     li.append(idx)
