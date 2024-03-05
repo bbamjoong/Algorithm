@@ -1,6 +1,6 @@
 import sys
+
 input = sys.stdin.readline
-import heapq
 
 n, m = map(int, input().split())
 li = [[] for _ in range(n + 1)]
@@ -11,27 +11,24 @@ for i in range(n - 1):
     li[b].append([a, c])
 
 
-def bfs(start):
-    q = []
-    visited = [False] * (n + 1)
+def dfs(now, sm):
+    global end, ans
+    if now == end:
+        ans = sm
+        return True
 
-    heapq.heappush(q, [start, 0])
-    visited[start] = True
-
-    while q:
-        now, sm = heapq.heappop(q)
-
-        if now == end:
-            return sm
-
-        for next, weight in li[now]:
-            if not visited[next]:
-                visited[next] = True
-                heapq.heappush(q, [next, sm + weight])
+    for next, weight in li[now]:
+        if not visited[next]:  # 방문 안했으면
+            visited[next] = True
+            if dfs(next, sm + weight):
+                return True
 
 
 for i in range(m):
     start, end = map(int, input().split())
+    visited = [False] * (n + 1)
+    visited[start] = True
 
-    ans = bfs(start)
+    ans = 0
+    dfs(start, 0)
     print(ans)
