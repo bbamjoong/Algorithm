@@ -10,8 +10,6 @@ public class Solution {
 
     static long start, end;
 
-    static long[] arr;
-
     static long num;
     static long ans;
 
@@ -24,7 +22,6 @@ public class Solution {
     static long findNumbers(long n) {
         ans = 0; // 리턴할 답은 0으로 초기화
         num = 1; // num의 초기값은 1
-        arr = new long[10]; // 0 ~ 9 까지 숫자 몇개 있는지 저장
         while (n > 0) {
             n = setToNine(n);
 
@@ -35,12 +32,22 @@ public class Solution {
                 return ans;
             }
 
+            // 숫자를 볼 때 현재 n의 일의자리 수를 봄.
             // 10 이상이라면 아래의 과정을 반드시 1번은 거침.
+            // 끝이 9로 끝남.
+            // 예를들어 숫자가 29라면
+            // 0부터 9까지 앞의 0 ~ 2 -> 총 3번씩 나오게 될 것임.
+
+            // 229라면
+            // 0부터 9까지 앞의 0 ~ 22 -> 총 23번씩 나오게 될 것임.
             for (int i = 0; i <= 9; i++) {
                 ans += i * ((n / 10 + 1) * num);
             }
 
-            num *= 10; // 자리수를 나타냄. 따라서 자리수가 커질 때마다 10씩 곱해줘야함.
+            // 현재 숫자의 일의자리 수는 이미 봤다.
+            // 그러니 지금 숫자를 10으로 나누어 주고 개수에 해당하는 num은 10 곱해준다.
+            // 이렇게 하면 자리수를 관리할 필요가 없음.
+            num *= 10; // 숫자의 개수에 해당하는 variable.
             n /= 10; // 현재 숫자를 10씩 나눠줌.
         }
 
