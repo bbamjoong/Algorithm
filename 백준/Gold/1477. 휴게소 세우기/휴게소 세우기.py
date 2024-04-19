@@ -8,14 +8,11 @@ li = [0] + list(map(int, input().split())) + [l]
 li.sort()
 
 size = len(li)
-start, end = 1, l - 1
-
-# min(휴게소가 없는 구간의 길이의 최댓값)
-# underbound
-# O(log l)
-while start <= end:
-    mid = (start + end) // 2
-
+ans = 0
+breakloop = False
+for mid in range(1, l):
+    if breakloop:
+        break
     cnt = 0
     # O(n)
     for i in range(1, size):
@@ -27,12 +24,9 @@ while start <= end:
             if (li[i] - li[i-1]) % mid == 0:
                 cnt -= 1
 
-    if cnt > m:
-        start = mid + 1
+    if cnt <= m:
+        ans = mid
+        breakloop = True
+        break
 
-    else:
-        end = mid - 1
-
-print(start)
-
-### O(n log l)
+print(mid)
