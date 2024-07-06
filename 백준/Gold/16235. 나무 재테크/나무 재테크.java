@@ -1,25 +1,33 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
-
 public class Main {
+
     static int n;
     static int m;
     static int k;
     static int[][] winterFood;
     static int[][] soil;
-    static TreeList[][] trees;
+    static Tree[][] trees;
     static int[] dx = {0, 0, -1, 1, 1, 1, -1, -1};
     static int[] dy = {-1, 1, 0, 0, 1, -1, 1, -1};
     static StringBuilder sb = new StringBuilder();
 
-    static class TreeList {
-        Tree head;
+    static class Tree {
+        int cnt = 0;
+        int age = 0;
+        Tree before;
+        Tree next;
 
-        TreeList() {
-            head = new Tree(-1); // 쓰레기 헤드 만들어주기
-            head.before = head;
-            head.next = head;
+        public Tree() { // 헤더 트리 만들기
+            before = next = this;
+        }
+
+        public Tree(int age) { // 문제에서 주어지는 트리 만들기
+            this.age = age;
+            cnt = 1;
+        }
+
+        public Tree(int age, int cnt) { // 번식할 트리 만들기(개수도 필요함)
+            this.age = age;
+            this.cnt = cnt;
         }
 
         // 문제에서 입력으로 주어지는 나무의 위치는 모두 다르다고 했다.
@@ -29,10 +37,10 @@ public class Main {
         // A(헤더)의 뒤에 B를 넣으면 된다.
         // A -> B -> C   =>    A -> D -> B -> C
         public void add(Tree tree) {
-            head.next.before = tree;
-            tree.next = head.next;
-            tree.before = head;
-            head.next = tree;
+            this.next.before = tree;
+            tree.next = this.next;
+            tree.before = this;
+            this.next = tree;
         }
 
         // X.delete(Y)
@@ -50,54 +58,63 @@ public class Main {
         // A -> B -> C -> D 가 있을때, C부터는 양분을 못먹어서 죽어버린다고 할 때
         // A.delete(C)를 해주면 A -> B만 남게 되는 것이다.
         public void delete(Tree tree) {
-            tree.before.next = head;
+            tree = tree.before;
+            tree.next = this;
+            this.before = tree;
         }
     }
 
-    static class Tree {
-        int cnt = 0;
-        int age = 0;
-        Tree before = null;
-        Tree next = null;
+    static final int BUFFER_SIZE = 1 << 13;
+    static byte[] buffer = new byte[BUFFER_SIZE];
+    static int bufferLen, bufferIdx;
 
-        public Tree(int age) { // 문제에서 주어지는 트리 만들기
-            this.age = age;
-            cnt = 1;
+    static int nextInt() throws Exception { // Int 입력
+        byte b;
+        int n = 0;
+        while ((b = read()) <= 32)
+            ;
+        do {
+            n = (n << 3) + (n << 1) + (b & 15);
+        } while (isNumber(b = read()));
+
+        return n;
+    }
+
+    static boolean isNumber(byte b) {
+        return 47 < b && b < 58;
+    }
+
+    static byte read() throws Exception {
+        if (bufferIdx == bufferLen) {
+            bufferLen = System.in.read(buffer, bufferIdx = 0, BUFFER_SIZE);
+            if (bufferLen == -1) {
+                buffer[0] = -1;
+            }
         }
-
-        public Tree(int age, int cnt) { // 번식할 트리 만들기(개수도 필요함)
-            this.age = age;
-            this.cnt = cnt;
-        }
-
+        return buffer[bufferIdx++];
     }
 
     static void setInputs() throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        k = Integer.parseInt(st.nextToken());
+        n = nextInt();
+        m = nextInt();
+        k = nextInt();
 
         winterFood = new int[n][n];
         soil = new int[n][n];
-        trees = new TreeList[n][n];
+        trees = new Tree[n][n];
 
         for (int r = 0; r < n; r++) {
-            st = new StringTokenizer(br.readLine());
             for (int c = 0; c < n; c++) {
-                winterFood[r][c] = Integer.parseInt(st.nextToken());
+                winterFood[r][c] = nextInt();
                 soil[r][c] = 5;
-                trees[r][c] = new TreeList();
+                trees[r][c] = new Tree();
             }
         }
 
         for (int i = 0; i < m; i++) {
-            st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken()) - 1;
-            int y = Integer.parseInt(st.nextToken()) - 1;
-            int z = Integer.parseInt(st.nextToken());
+            int x = nextInt() - 1;
+            int y = nextInt() - 1;
+            int z = nextInt();
 
             trees[x][y].add(new Tree(z));
         }
@@ -109,7 +126,7 @@ public class Main {
 
                 boolean canAbsorbSoil = true;
                 Tree treeToDelete = null;
-                Tree tree = trees[i][j].head.next; // 헤드의 다음 나무가 1번 나무
+                Tree tree = trees[i][j].next;
 
                 while (tree.age > 0) { // 나무 끝까지 탐색해서 다시 헤더로 돌아 온다면 종료
                     // 양분 섭취
@@ -162,7 +179,7 @@ public class Main {
     private static void performAutumnOperation() { // 가을 행동
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                Tree tree = trees[i][j].head.next; // 헤드의 다음 나무가 1번 나무
+                Tree tree = trees[i][j].next;
                 while (tree.age > 0) { // 헤더로 다시 돌아오면 종료.
                     // 나이가 5의 배수인 나무의 경우
                     if (tree.age % 5 == 0) {
@@ -174,14 +191,14 @@ public class Main {
                                 continue;
                             }
 
-                            if (trees[nx][ny].head.next.age == 1) { // 이미 해당칸에 다른칸에서 번식해온 나무가 있으면
-                                // 헤더만 존재했다면 헤드의 age는 -1이라 조건을 만족 못해요.(이 때 헤드의 next는 헤드임)
-                                trees[nx][ny].head.next.cnt += tree.cnt; // 이제 번식할 나무의 개수만 더해주면 된다.
+                            if (trees[nx][ny].next.age == 1) { // 이미 해당칸에 다른칸에서 번식해온 나무가 있으면
+                                // 헤더만 존재했다면 해더의 age는 0이라 조건을 만족 못해요.
+                                trees[nx][ny].next.cnt += tree.cnt; // 이제 번식할 나무의 개수만 더해주면 된다.
                                 continue;
                             }
 
-                            // 해당 칸에 처음 번식을 하는거라면 나이는 1, 번식할 나무의 개수로 tree 생성
-                            trees[nx][ny].add(new Tree(1, tree.cnt));
+                            trees[nx][ny].add(
+                                    new Tree(1, tree.cnt)); // 해당 칸에 처음 번식을 하는거라면 나이는 1, 번식할 나무의 개수로 tree 생성
 
                         }
                     }
@@ -203,7 +220,7 @@ public class Main {
         int ans = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                Tree tree = trees[i][j].head.next;
+                Tree tree = trees[i][j].next;
                 while (tree.age > 0) { // 헤더로 다시 돌아오면 종료
                     ans += tree.cnt; // 나무 count 해주기
                     tree = tree.next; // 다음 트리로 Go
