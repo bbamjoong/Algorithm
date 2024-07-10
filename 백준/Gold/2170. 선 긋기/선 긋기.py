@@ -7,7 +7,7 @@ ans = 0
 
 for _ in range(n):
     # 겹치는 경우
-    lines.append(list(map(int, input().split())))
+    lines.append(tuple(map(int, input().split())))
 
 # 정렬을 하지 않아주면 line들의 start, end 그룹이 바뀔 경우
 # 별도로 관리를 해 주어야 하기 때문에 귀찮아짐 +
