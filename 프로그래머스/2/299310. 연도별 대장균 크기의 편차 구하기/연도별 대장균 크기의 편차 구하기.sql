@@ -1,0 +1,18 @@
+SELECT
+    YEAR(DIFFERENTIATION_DATE) AS YEAR,
+    
+    (
+        SELECT
+            MAX(ED2.SIZE_OF_COLONY)
+        FROM
+            ECOLI_DATA AS ED2
+        WHERE
+            YEAR = YEAR(ED2.DIFFERENTIATION_DATE)
+    ) - SIZE_OF_COLONY AS YEAR_DEV,
+    
+    ID
+FROM
+    ECOLI_DATA
+ORDER BY
+    YEAR,
+    YEAR_DEV
