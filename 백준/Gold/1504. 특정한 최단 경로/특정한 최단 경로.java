@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -20,11 +19,11 @@ class Main {
     static StringTokenizer st;
 
     static class Node implements Comparable<Node> {
-        int value;
+        int next;
         int cost;
 
-        public Node(int value, int cost) {
-            this.value = value;
+        public Node(int next, int cost) {
+            this.next = next;
             this.cost = cost;
         }
 
@@ -89,9 +88,10 @@ class Main {
 
     static int[] di(int start) {
         int[] dist = new int[n + 1];
+        boolean[] visited = new boolean[n + 1];
 
         for (int i = 0; i < n + 1; i++) {
-            dist[i] = maxValue;
+            dist[i] = 200_000 * 1_000;
         }
 
         PriorityQueue<Node> pq = new PriorityQueue<>();
@@ -101,14 +101,26 @@ class Main {
         while (!pq.isEmpty()) {
             Node now = pq.poll();
 
-            for (Node next : li[now.value]) {
-                // 다음 노드로 가는 예상 값 = 현재 노드의 거리 + 다음노드까 드는 비용
-                int cost = dist[now.value] + next.cost;
+            if (visited[now.next]) {
+                continue;
+            }
 
-                if (dist[next.value] > cost) {
-                    dist[next.value] = cost;
-                    pq.add(new Node(next.value, dist[next.value]));
+            // 현재 방문하지 않은 노드라면?
+            visited[now.next] = true;
+
+            for (Node next : li[now.next]) {
+                // 다음 노드 방문하지 않아야함
+                if (visited[next.next]) {
+                    continue;
                 }
+
+                // 다음 방문하는 노드가 더 긴 거리면 안돼요
+                if (dist[next.next] < dist[now.next] + next.cost) {
+                    continue;
+                }
+                dist[next.next] = dist[now.next] + next.cost;
+
+                pq.add(new Node(next.next, dist[next.next]));
             }
         }
 
