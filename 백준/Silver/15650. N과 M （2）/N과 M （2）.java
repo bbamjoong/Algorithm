@@ -3,37 +3,45 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+
     static int n;
     static int m;
+    static int[] res;
     static boolean[] visited;
-    static StringBuilder sb = new StringBuilder();
+
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
 
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
-        visited = new boolean[n + 1];
 
-        dfs(1, 0);
-        System.out.println(sb);
+        res = new int[m];
+        visited = new boolean[n + 1];
+        dfs(0, 1);
     }
 
-    static void dfs(int start, int depth) {
+    static void dfs(int depth, int index) {
+
         if (depth == m) {
-            for (int i = 1; i < visited.length; i++) {
-                if (visited[i]) {
-                    sb.append(i).append(" ");
-                }
+            for (int i : res) {
+                System.out.print(i + " ");
             }
-            sb.append("\n");
+            System.out.println();
             return;
         }
 
-        for (int i = start; i < n + 1; i++) {
-            visited[i] = true;
-            dfs(i + 1, depth + 1);
-            visited[i] = false;
+        for (int i = index; i < n + 1; i++) {
+
+            if (!visited[i]) {
+                visited[i] = true;
+                res[depth] = i;
+                dfs(depth + 1, i + 1);
+
+                visited[i] = false;
+            }
         }
     }
 }
