@@ -1,49 +1,48 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int n, m;
+
+    static int n;
+    static int m;
     static int[] res;
-    static StringBuilder sb = new StringBuilder();
+    static boolean[] visited;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
 
-        n = Integer.parseInt(tokenizer.nextToken());
-        m = Integer.parseInt(tokenizer.nextToken());
+    public static void main(String[] args) throws Exception {
+
+        st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
 
         res = new int[m];
+        visited = new boolean[n];
         dfs(0);
-
-        System.out.println(sb.toString());
     }
 
-    static void dfs(int index) {
-        if (index == m) {
-            for (int i = 0; i < m; i++) {
-                sb.append(res[i]).append(" ");
+    static void dfs(int depth) {
+
+        if (depth == m) {
+            for (int i : res) {
+                System.out.print(i + " ");
             }
-            sb.append("\n");
+            System.out.println();
             return;
         }
 
-        for (int i = 1; i <= n; i++) {
-            if (!contains(res, index, i)) {
-                res[index] = i;
-                dfs(index + 1);
-            }
-        }
-    }
+        for (int i = 0; i < n; i++) {
 
-    static boolean contains(int[] arr, int index, int value) {
-        for (int i = 0; i < index; i++) {
-            if (arr[i] == value) {
-                return true;
+            if (!visited[i]) {
+                visited[i] = true;
+                res[depth] = i + 1;
+                dfs(depth + 1);
+
+                visited[i] = false;
             }
         }
-        return false;
+
     }
 }
