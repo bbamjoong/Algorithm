@@ -1,43 +1,45 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class Main {
-
     static int n;
     static List<int[]> lines;
-
     static List<Integer> lis;
     static List<int[]> dp;
-
+    
+    private static int read() throws Exception {
+        int d, o;
+        boolean negative = false;
+        d = System.in.read();
+        if(d == '-') {
+            negative = true;
+            d = System.in.read();
+        }
+        o = d & 15;
+        while((d = System.in.read()) > 32)
+            o = (o << 3) + (o << 1) + (d & 15);
+        return negative ? -o : o;
+    }
+    
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
-        n = Integer.parseInt(br.readLine());
-
+        n = read();
         lines = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            lines.add(new int[]{a, b}); // 시작, 도착
+            int a = read();
+            int b = read();
+            lines.add(new int[]{a, b, a});
         }
-        lines.sort((a, b) -> a[0] - b[0]);
-
+        Collections.sort(lines, (o1, o2) -> o1[0] - o2[0]);
         lis = new ArrayList<>();
         lis.add(0);
         dp = new ArrayList<>();
-
         for (int[] line : lines) {
             int len = lis.size();
             int target = line[1];
-            int start = line[0];
-
+            int start = line[2];
             if (lis.get(len - 1) < target) {
                 lis.add(target);
                 dp.add(new int[]{len, target, start});
@@ -47,51 +49,42 @@ public class Main {
                 dp.add(new int[]{idx, target, start});
             }
         }
-
         int cnt = lis.size() - 1;
         List<Integer> res = new ArrayList<>();
-
-        for (int i = dp.size() - 1; i > -1; i--) {
+        for (int i = dp.size() - 1; i >= 0; i--) {
             if (dp.get(i)[0] == cnt) {
                 res.add(dp.get(i)[2]);
                 cnt--;
             }
-            if (cnt < 0) {
-                break;
-            }
+            if (cnt < 0) break;
         }
-
-        // LIS에 포함된 전깃줄 번호(a값)를 저장
-        HashSet<Integer> keep = new HashSet<>(res);
-
+        HashSet<Integer> keep = new HashSet<>();
+        for (int num : res) {
+            keep.add(num);
+        }
         List<Integer> removed = new ArrayList<>();
         for (int[] line : lines) {
             int num = line[0];
-            if (!keep.contains(num)) {
+            if (!keep.contains(num))
                 removed.add(num);
-            }
         }
         Collections.sort(removed);
-
         StringBuilder sb = new StringBuilder();
         sb.append(removed.size()).append("\n");
-        for (int num : removed) {
+        for (int num : removed)
             sb.append(num).append("\n");
-        }
         System.out.print(sb.toString());
     }
-
+    
     static int binary(int target) {
         int left = 0;
         int right = lis.size() - 1;
-
         while (left <= right) {
             int mid = (left + right) / 2;
-            if (lis.get(mid) < target) {
+            if (lis.get(mid) < target)
                 left = mid + 1;
-            } else {
+            else
                 right = mid - 1;
-            }
         }
         return left;
     }
