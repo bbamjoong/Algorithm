@@ -44,14 +44,13 @@ public class Main {
         }
 
         for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (i == j)
-                    continue;
+            for (int j = i + 1; j <= n; j++) {
+                // 두 선분이 일직선으로 만나거나, cross로 만나거나.
                 int iParent = find(i);
                 int jParent = find(j);
 
                 if (iParent != jParent) {
-                    if (isCrossed(lines[i], lines[j])) {
+                    if (isCrossed(lines[i], lines[j])) { // cross 검증을 해야함. 올바른경우만 union.
                         union(i, j);
                     }
                 }
@@ -63,7 +62,7 @@ public class Main {
         int size = 0;
 
         for (int i = 1; i <= n; i++) { // 몇번 분리집합이 가장 큰지 체크
-            cnt[parents[i]]++;
+            cnt[find(i)]++;
         }
 
         for (int i = 1; i <= n; i++) {
