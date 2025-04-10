@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -15,7 +13,9 @@ public class Main {
     static boolean[] visited;
     static long[] fArr;
 
-    static List<Integer> ansList;
+    static int[] ansArr;
+    static int ansPointer;
+
     static long ans;
 
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,16 +35,19 @@ public class Main {
                     if (visited[j]) {
                         continue;    //이미 사용된 숫자는 패스
                     }
+
                     if (k - fArr[n - 1 - i] > 0) {
                         k -= fArr[n - 1 - i];
-                    } else {
-                        ansList.add(j);
-                        visited[j] = true;
-                        break;
+                        continue;
                     }
+
+                    ansArr[ansPointer++] = j;
+                    visited[j] = true;
+                    break;
+
                 }
             }
-            for (Integer num : ansList) {
+            for (Integer num : ansArr) {
                 sb.append(num).append(" ");
             }
 
@@ -52,6 +55,7 @@ public class Main {
             for (int i = 0; i < n; i++) {
                 arr[i] = Integer.parseInt(st.nextToken());
             }
+
             for (int i = 0; i < n; i++) { // 확인중인 자리수
                 for (int j = 1; j < arr[i]; j++) { // 확인중인 자리수에 올 수 있었던 더 작은 숫자들 확인.
                     if (!visited[j]) {
@@ -78,12 +82,13 @@ public class Main {
         n = Integer.parseInt(br.readLine());
 
         st = new StringTokenizer(br.readLine());
-
         num = Integer.parseInt(st.nextToken());
-        long k = 0;
+
         arr = new int[n + 1];
         visited = new boolean[n + 1];
-        ansList = new ArrayList<>();
+        ansArr = new int[n];
+        ansPointer = 0;
+        
         ans = 1;
     }
 }
