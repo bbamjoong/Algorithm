@@ -76,11 +76,8 @@ class Solution {
             if (next != null) next.prev = prev;
             
             // 커서를 아래로, 없으면 위로
-            if (next == null) {
-                current = prev;
-            } else if (next != null) {
-                current = next;
-            }
+            if (next == null) current = prev;
+            else if (next != null) current = next;
         }
         
         public void recover() {
