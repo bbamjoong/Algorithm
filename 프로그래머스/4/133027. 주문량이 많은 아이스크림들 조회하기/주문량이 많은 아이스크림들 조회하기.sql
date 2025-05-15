@@ -1,5 +1,11 @@
-SELECT F.FLAVOR 
-FROM FIRST_HALF F JOIN JULY J ON F.FLAVOR = J.FLAVOR
-GROUP BY FLAVOR
-ORDER BY SUM(F.TOTAL_ORDER) + SUM(J.TOTAL_ORDER) DESC
-LIMIT 3
+with ans as (
+    select * from first_half
+union all
+select * from july
+)
+    
+select flavor
+from ans
+group by flavor
+order by sum(total_order) desc
+limit 3;
