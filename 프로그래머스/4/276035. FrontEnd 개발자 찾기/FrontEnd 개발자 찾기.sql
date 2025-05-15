@@ -1,6 +1,4 @@
-SELECT DISTINCT D.ID, D.EMAIL, D.FIRST_NAME, D.LAST_NAME
-FROM DEVELOPERS D
-JOIN SKILLCODES S
-ON D.SKILL_CODE & S.CODE
-WHERE S.CATEGORY="Front End"
-ORDER BY ID;
+select distinct d.id, d.email, d.first_name, d.last_name
+from developers d join skillcodes s 
+    on s.code = (d.skill_code & s.code)
+where s.category='Front End' order by d.id;
