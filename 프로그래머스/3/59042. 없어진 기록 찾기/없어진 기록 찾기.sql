@@ -1,7 +1,3 @@
--- 코드를 입력하세요
-SELECT OUTS.ANIMAL_ID, OUTS.NAME
-
-FROM ANIMAL_OUTS OUTS LEFT JOIN ANIMAL_INS INS ON INS.ANIMAL_ID = OUTS.ANIMAL_ID AND INS.NAME = OUTS.NAME
-WHERE INS.DATETIME IS NULL
-AND OUTS.NAME IS NOT NULL
-AND OUTS.ANIMAL_ID IS NOT NULL
+select o.animal_id, o.name
+from animal_ins i right join animal_outs o on i.animal_id = o.animal_id
+where i.datetime is null
