@@ -1,11 +1,9 @@
--- 코드를 입력하세요
-SELECT M.MEMBER_NAME, R.REVIEW_TEXT, DATE_FORMAT(R.REVIEW_DATE, "%Y-%m-%d") AS REVIEW_DATE
-FROM MEMBER_PROFILE M JOIN REST_REVIEW R ON M.MEMBER_ID = R.MEMBER_ID
-WHERE M.MEMBER_ID = (
-    SELECT R2.MEMBER_ID
-    FROM REST_REVIEW R2
-    GROUP BY R2.MEMBER_ID
-    ORDER BY COUNT(R2.MEMBER_ID) DESC
-    LIMIT 1
-    )
-ORDER BY R.REVIEW_DATE, REVIEW_TEXT
+select p.member_name, r.review_text, date_format(r.review_date, "%Y-%m-%d") as review_date
+from member_profile p join rest_review r on p.member_id = r.member_id
+where p.member_id = (
+    select member_id
+    from rest_review
+    group by member_id
+    order by count(member_id) desc limit 1)
+
+order by review_date, review_text
