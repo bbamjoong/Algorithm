@@ -1,52 +1,38 @@
-import java.util.*;
+import java.util.Arrays;
 
 class Solution {
-        
-    static class Point implements Comparable<Point> {
-        int num;
-        int count;
-        
-        Point(int num, int count){
-            this.num = num;
-            this.count = count;
-        }
-        
-        @Override
-        public int compareTo(Point p){
-            if (this.count != p.count) return p.count - this.count;
-            return this.num - p.num;
-        }
-    }
-    
-    static Point[] dp;
-    
     public int[] solution(int e, int[] starts) {
-        dp = new Point[e + 1];
+        // x의 약수 개수 저장
+        int[] cnt = new int[e + 1];
         
-        for(int i = 0; i <= e; i++) dp[i] = new Point(i, 0);
-        
-        //배수 세기 O(e log e)
-        for(int i = 1; i <= e; i++){
-            for(int j = i; j <= e; j += i){
-                dp[j].count++;
+        // 약수 계산. O(e log e)
+        for (int i = 1; i <= e; i++) {
+            for (int j = i; j <= e; j += i) {
+                cnt[j]++;
             }
         }
         
-        //약수의 개수가 큰 순서대로 정렬 O(e log e)
-        Arrays.sort(dp);     
+        // [i..e] 구간에서 약수 개수가 가장 많고, 동일하면 가장 작은 수
+        int[] best = new int[e + 1];
+        int maxCnt = 0;
+        int maxArg = e;
         
+        // e에서 1까지 내려오며 best[]를 채운다 (O(e))
+        for (int i = e; i >= 1; i--) {
+            if (cnt[i] > maxCnt) {
+                maxCnt = cnt[i];
+                maxArg = i;
+            } else if (cnt[i] == maxCnt && i < maxArg) {
+                maxArg = i; // 동일한 등장 횟수(count)라면 더 작은 수(i)를 선택
+            }
+            best[i] = maxArg;
+        }
+        
+        // starts 배열을 순회 (O(starts.length))
         int[] answer = new int[starts.length];
-        
-        for(int i = 0; i < starts.length; i++){
-            
-            for(int j = 0; j <= e; j++){
-                if(starts[i] <= dp[j].num){
-                    answer[i] = dp[j].num;
-                    break;
-                }
-            }
+        for (int k = 0; k < starts.length; k++) {
+            answer[k] = best[starts[k]];
         }
-        
         return answer;
     }
 }
